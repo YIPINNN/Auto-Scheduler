@@ -1,0 +1,100 @@
+.sidebar {
+  width: 260px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 1000;
+}
+
+.sidebar-logo {
+  padding: 40px 25px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background: var(--neon-green, #4ecca3);
+  color: #0f172a;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-weight: 900;
+  font-size: 0.8rem;
+}
+
+.sidebar-logo h2 {
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  margin: 0;
+  color: #fff;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-radius: 12px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+
+.nav-item.active {
+  background: rgba(78, 204, 163, 0.1);
+  color: #4ecca3;
+}
+
+.nav-icon {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.nav-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* The neon glow strip for active items */
+.active-glow {
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 20px;
+  background: #4ecca3;
+  box-shadow: 0 0 10px #4ecca3;
+  border-radius: 0 4px 4px 0;
+}
+
+.sidebar-footer {
+  padding: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.version-tag {
+  font-size: 0.7rem;
+  color: #475569;
+  letter-spacing: 1px;
+}

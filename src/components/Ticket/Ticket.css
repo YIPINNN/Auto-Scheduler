@@ -1,0 +1,61 @@
+.ticket-list-wrapper {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ticket-table th {
+  text-align: left;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.75rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.ticket-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.id-cell { color: #4ecca3; font-weight: bold; font-family: 'Courier New', monospace; }
+.wait-text { color: #64748b; font-size: 0.8rem; font-style: italic; }
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.status-badge.active { background: rgba(78, 204, 163, 0.1); color: #4ecca3; }
+.status-badge.open { background: rgba(255, 77, 77, 0.1); color: #ff4d4d; }
+
+.detail-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.detail-btn:hover { color: #fff; }
+
+/* Modal Styling */
+.ticket-modal { width: 550px !important; }
+.ticket-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+.detail-box.full { grid-column: span 2; }
+.detail-box label { display: block; font-size: 0.7rem; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+.detail-box p { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; margin: 0; font-size: 0.85rem; }
+.border-red { border-left: 3px solid #ff4d4d; }
+.border-green { border-left: 3px solid #4ecca3; }
+

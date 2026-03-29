@@ -1,0 +1,84 @@
+/* KPI Grid */
+.performance-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.performance-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+}
+
+.perf-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.perf-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.perf-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+/* Chart Layout */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 25px;
+}
+
+.chart-wrapper {
+  padding: 30px;
+  min-height: 420px;
+}
+
+.chart-header {
+  margin-bottom: 30px;
+}
+
+.chart-header h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin: 0 0 5px 0;
+}
+
+.chart-header span {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.recharts-box {
+  width: 100%;
+  height: 300px;
+}
+
+/* Custom Tooltip Styling */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

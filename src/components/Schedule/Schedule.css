@@ -1,0 +1,88 @@
+/* Drop Zone Styling */
+.drop-zone {
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 30px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.drop-zone.active {
+  border-color: #4ecca3;
+  background: rgba(78, 204, 163, 0.05);
+  transform: scale(1.01);
+}
+
+.drop-content h3 { margin: 15px 0 5px; color: #fff; }
+.drop-content p { color: #94a3b8; margin-bottom: 20px; }
+
+/* Gantt Chart Styling */
+.gantt-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.gantt-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gantt-label {
+  width: 120px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.gantt-track {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  border-radius: 8px;
+  min-height: 50px;
+}
+
+.gantt-block {
+  padding: 8px 15px;
+  border-radius: 6px;
+  color: #000;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  animation: slideIn 0.5s ease forwards;
+}
+
+.gantt-axis {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 10px;
+}
+
+.axis-spacer { width: 120px; }
+.axis-labels {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  color: #475569;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
