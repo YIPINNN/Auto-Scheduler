@@ -59,3 +59,109 @@
 .border-red { border-left: 3px solid #ff4d4d; }
 .border-green { border-left: 3px solid #4ecca3; }
 
+/* Existing styles remain, add/update these: */
+
+.assigned-tech {
+  color: #3b82f6;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Dropdown Badge Styling */
+.status-select {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  appearance: none; /* Removes default arrow for a cleaner look */
+  text-align: center;
+}
+
+.status-select.pending {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+.status-select.attending {
+  border-color: #facc15;
+  color: #facc15;
+}
+
+.status-select.completed {
+  border-color: #4ecca3;
+  color: #4ecca3;
+}
+
+.status-select:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.status-select option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* Loader Text animation */
+.loader-text {
+  text-align: center;
+  margin-top: 50px;
+  color: #4ecca3;
+  letter-spacing: 2px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.status-select {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.status-select.pending { color: #ff4d4d; border-color: rgba(255, 77, 77, 0.3); }
+.status-select.attending { color: #facc15; border-color: rgba(250, 204, 21, 0.3); }
+.status-select.completed { color: #4ecca3; border-color: rgba(78, 204, 163, 0.3); }
+
+.status-select option {
+  background: #1e293b;
+  color: #fff;
+}
+
+.assigned-tech-name {
+  color: #3b82f6; /* A nice bright blue */
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.wait-text {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.tech-cell {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+}

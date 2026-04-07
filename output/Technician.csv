@@ -1,0 +1,36 @@
+employeeID,fullName,email,targetGroup,jobTitle,endDate,startDate,status,technicianStatusID,jobTitleID,workload
+36525,Norazura Mohd Noor,tanyipin42@gmail.com,MFG,"Leader, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,353d905f-069e-44fe-bf23-050740f927fa,,0
+1000274402,Muhammad Aizat Bin Rahim,tanyipin42@gmail.com,EE,"Operator 2, Engineering",,2026-03-03T18:54:23.933411+00:00,Active,c0a8ed74-d527-40f6-b159-f3d5abcbc403,5005.0,0
+1000405802,Darushani A/P Umabathy,tanyipin42@gmail.com,PE,"Operator 2, Engineering",,2026-03-03T18:54:23.933411+00:00,Active,3b9b4b40-2e9f-4d80-b15f-34744a1872a8,5005.0,0
+1000297986,Muhammad Fitri Bin Harun,tanyipin42@gmail.com,EE,"Operator 2, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,71a2b723-fdfd-4633-be62-aab457fd4758,5005.0,0
+1000256724,Seng Yu Tan,tanyipin42@gmail.com,NPI,"Principal Engineer, Packaging Engineering",,2026-03-03T18:54:23.933411+00:00,Active,57e8f589-44bc-49ce-862e-3fe5638b72a1,,0
+1000405627,Mark Sydney,tanyipin42@gmail.com,EE,"Technician 2, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,8cd825de-87ce-4c38-b3b6-4fe7df2f1015,5009.0,0
+1000312496,Muhammad Arif,tanyipin42@gmail.com,EE,"Technician 2, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,3f768842-ee4c-4f62-a316-99dbfdf2ddc1,5009.0,0
+1000286793,SAMUS A/L AIPON,tanyipin42@gmail.com,EE,"Technician 3, Engineering",,2026-03-03T18:54:23.933411+00:00,Active,79517e81-b05d-410e-9474-a3870197336a,5010.0,0
+26604,Haliza Hamzah,tanyipin42@gmail.com,MFG,"Senior Leader, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,07993380-8b3c-42cc-9a30-58fd8721957d,,0
+1000302591,Ahmad Shafaez Bin Shaidi,tanyipin42@gmail.com,PE,"Technician 3, Process",,2026-03-03T18:54:23.933411+00:00,Active,bc4806d3-cc23-4e39-9ecd-a10dc1b1f357,5010.0,0
+1000302075,Muhammad Asri,tanyipin42@gmail.com,PE,"Technician 3, Process",,2026-03-03T18:54:23.933411+00:00,Active,ce2153dc-5ef3-488b-9454-ce5f6081ec51,5010.0,0
+1000306096,YOGARAJAN SUPPIAH YOGARAJAN SUPPIAH,tanyipin42@gmail.com,SUPERVISOR,"Technician 5, Engineering",,2026-03-03T18:54:23.933411+00:00,Active,4dc8958c-4fc2-4811-83af-37f7d36f5da9,5009.0,0
+1000302035,RUZAINI SYAWAL BIN ROSDI,tanyipin42@gmail.com,EE,"Technician 3, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,1c6ea116-0ad8-480b-9953-8d9176b12ea1,5010.0,0
+29536,Azzet Sabree Ahmad,tanyipin42@gmail.com,EE,"Technician 5, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,d2f1281b-1960-4e26-9e7e-7adf2b81e5e1,5011.0,1
+1000298122,MOHD AZIZI MANSOR,tanyipin42@gmail.com,NPI,"Technician 4, Engineering",,2026-03-03T18:54:23.933411+00:00,Active,b037fb17-8ee4-4c80-8821-ef56f59d0146,5011.0,0
+1000305966,Mohd Raimi Rouse,tanyipin42@gmail.com,NPI,"Technician 5, Process",,2026-03-03T18:54:23.933411+00:00,Active,c765aabb-63e6-47bd-97e0-55c03f639839,5012.0,0
+1000308623,Dhashni Guna Segaran,tanyipin42@gmail.com,PE,"Engineer, Process Engineering",,2026-03-03T18:54:23.933411+00:00,Active,0f35af1f-4b3b-4db1-8b8a-9c7c6cd4f63c,5001.0,0
+39306,uttam karki,tanyipin42@gmail.com,TECH,"Leader, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,da821e10-3948-4d90-b101-cf11c97c05d0,,1
+1000405856,Muhammad Abhimanshah Bin Shaharin,tanyipin42@gmail.com,MFG,"Operator 1, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,22720c2b-3a09-46d0-aa76-1b53f60ff1a8,5004.0,0
+1000404653,Surendran A/L Gunalan,tanyipin42@gmail.com,MFG,"Operator 1, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,c165862c-17f0-45a2-bb37-114445b8ee4d,5004.0,0
+1000404534,Nur Wahida Binti Mohamad Zahir,tanyipin42@gmail.com,MFG,"Operator 1, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,f3338ff4-29d0-4b30-a82f-f0652cf31314,5004.0,0
+31817,Ritiren Thebe Limbu,tanyipin42@gmail.com,MFG,"Operator 2, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,314bf8e6-b1b0-4170-bd9e-a544f14d53d7,5005.0,0
+1000298435,Dominic Carcallas,tanyipin42@gmail.com,EE,"Staff Engineer, Equipment Engineering",,2026-03-03T18:54:23.933411+00:00,Active,d85324c7-d358-477e-9ec2-59acc8c31d01,5001.0,0
+1000405431,Muhammad Azridz Bin Mohd Sobri,tanyipin42@gmail.com,MFG,"Operator 2, Manufacturing",,2026-03-03T18:54:23.933411+00:00,Active,a2b94690-02c6-4dfe-a42d-51aad06c20fa,5005.0,0
+1000305256,FAUZI IBRAHIM,tanyipin42@gmail.com,EE,"Senior Engineer, Manufacturing Equipment Engineering",,2026-03-03T18:54:23.933411+00:00,Active,9733e0f3-e762-4346-8d1a-d97db5df1ad6,5006.0,0
+1000405724,Amir Wafiq Bin Yusaini Amir,tanyipin42@gmail.com,NPI,"Senior Engineer, Packaging Engineering",,2026-03-03T18:54:23.933411+00:00,Active,ec904f28-f178-4af1-86fc-91f523d4fa8b,5006.0,0
+1000304282,'Afif Pauzi,tanyipin42@gmail.com,PE,"Senior Engineer, Process Engineering",,2026-03-03T18:54:23.933411+00:00,Active,d7e0347c-693e-4da7-b1a6-f6e3c72ac612,5005.0,0
+1000404594,Syazwani Erizon,tanyipin42@gmail.com,NPI,"Senior Engineer, Packaging Engineering",,2026-03-03T18:54:23.933411+00:00,Active,32667c65-f8cc-4b78-989b-a9b8fee38812,5006.0,0
+1000405727,Parameswaran A/L Puballan,tanyipin42@gmail.com,EE,"Technician 2, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,c8d2b83a-9f86-4be0-83c1-2eb73fb80301,5009.0,0
+1000251236,Muhammad Anuar Bin Ismail,tanyipin42@gmail.com,NPI,"Technician 4, Engineering",,2026-03-03T18:54:23.933411+00:00,Active,7252dc49-82fa-40df-8eb3-790285d048d7,5011.0,0
+1000306972,LIAN ZHANG YAN,tanyipin42@gmail.com,NPI,"Engineer, Packaging Engineering",,2026-03-03T18:54:23.933411+00:00,Active,43ed8c8e-2230-4e41-923e-5aed0e0fc552,5001.0,0
+1000299235,Muhammad Haikal Samsudin,tanyipin42@gmail.com,EE,"Technician 3, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,24115b62-8812-4f1d-8ba0-b13c17366d33,5010.0,0
+42195,Marc Jan Apilado,tanyipin42@gmail.com,EE,"Staff Engineer, Equipment Engineering",,2026-03-03T18:54:23.933411+00:00,Active,26a8f0ee-1a28-4476-b2a8-b96bc96a2452,5001.0,0
+40776,Hakimie Idris,tanyipin42@gmail.com,EE,"Technician 4, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,974ac0cf-056f-463f-ba90-49a01fd66928,5011.0,0
+30222,Rosli Abdul Wahab,tanyipin42@gmail.com,EE,"Technician 5, Manufacturing Equipment",,2026-03-03T18:54:23.933411+00:00,Active,1d73c9fe-3626-49c6-851d-77cd714cb79f,5012.0,0

@@ -262,3 +262,22 @@
   font-size: 0.8rem;
   color: #cbd5e1;
 }
+
+/* Loading Animation for Text */
+.loader-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  color: #4ecca3; /* Your neon green */
+  letter-spacing: 4px;
+  text-align: center;
+  margin-top: 100px;
+  animation: blink 1.5s infinite;
+  font-weight: bold;
+  text-shadow: 0 0 10px rgba(78, 204, 163, 0.5);
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}

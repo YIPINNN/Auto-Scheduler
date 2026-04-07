@@ -1,0 +1,63 @@
+Experiment ID: 411253 
+----------------------
+Start Time: 2026-04-07 17:33:14 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+----------------------
+Use PSF: 1 
+No. of PSF: 6 
+Initial HH Blocks: 2 
+Max HH Blocks: 10 
+Initial Temperature: 1.0000 
+Min Temperature: 0.0010 
+Cooling Rate: 0.9500 
+Objectives: Workload Variance & Penalty 
+------------------------------------------------------------------
+
+===== RUN 1 =====
+Initial Solution:
+Variance: 0.0868
+Penalty: 0.0000
+----------------------
+
+===== FINAL ASSIGNMENT =====
+Technician 1000302586:
+  T005
+Technician 1000312496:
+  T003
+Technician 1000405627:
+  T004
+Technician 29536:
+  T001
+Technician 39306:
+  T007
+  T002
+Technician 39312:
+  T006
+
+Final Objectives:
+Variance: 0.0868
+Penalty: 0.0000
+
+Statistics:
+No of Acceptance: 1
+No of Rejection: 0
+Iterations: 30
+
+===== PARETO FRONT =====
+Solution 1 (Obj: [0.0868 0.0000])
+Invalid assignment format
+----------------------
+Solution 2 (Obj: [0.0868 0.0000])
+Ticket T001 → Tech 29536
+Ticket T002 → Tech 39306
+Ticket T003 → Tech 1000312496
+Ticket T004 → Tech 1000405627
+Ticket T005 → Tech 1000302586
+Ticket T006 → Tech 39312
+Ticket T007 → Tech 39306
+----------------------
+
+===== FINAL SUMMARY =====
+Run 1 Pareto Size: 2
+End Time: 2026-04-07 17:33:22
+Execution Time: 00:00:07

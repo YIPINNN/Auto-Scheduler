@@ -99,7 +99,15 @@ body {
   gap: 20px;
 }
 
-.tech-profile { display: flex; align-items: center; gap: 12px; }
+.tech-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 240px; /* Increased width to accommodate long names and IDs */
+  min-width: 240px; /* Prevents the name section from shrinking */
+  flex-shrink: 0; /* Ensures the bar doesn't squeeze the profile */
+}
+
 .avatar-mini {
   width: 35px; height: 35px;
   background: var(--accent-blue);
@@ -108,8 +116,9 @@ body {
 }
 
 .track {
-  height: 35px;
-  background: rgba(255,255,255,0.05);
+  flex-grow: 1; /* This makes the bar take up all REMAINING space */
+  height: 32px;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 20px;
   position: relative;
   overflow: hidden;
@@ -245,4 +254,94 @@ body {
 .dashboard-content {
   padding: 40px;
   box-sizing: border-box;
+}
+
+.ticket-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto; /* Adds a scrollbar */
+  max-height: 500px; /* Limits the height so it doesn't break the layout */
+  padding-right: 10px;
+}
+
+/* Custom Scrollbar for internal scroll areas */
+.visual-timeline::-webkit-scrollbar,
+.ticket-stack::-webkit-scrollbar {
+  width: 6px;
+}
+
+.visual-timeline::-webkit-scrollbar-track,
+.ticket-stack::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+}
+
+.visual-timeline::-webkit-scrollbar-thumb,
+.ticket-stack::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.visual-timeline::-webkit-scrollbar-thumb:hover,
+.ticket-stack::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-green); /* Turns green when you interact with it */
+}
+
+/* Ensure the tech profile doesn't shrink when scrolling */
+.tech-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 220px; /* Gives enough space for name + ID */
+}
+
+.tech-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden; /* Prevents text from spilling out */
+}
+
+.tech-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tech-meta small {
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+
+
+.timeline-row {
+  display: flex; /* Use flex instead of grid to prevent overlapping */
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 25px; /* Space between the name area and the bar */
+  padding: 10px;
+  border-radius: 12px;
+  transition: background 0.3s ease;
+}
+
+.timeline-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Empty state styling */
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  color: #64748b;
+  font-style: italic;
+  font-size: 0.85rem;
 }

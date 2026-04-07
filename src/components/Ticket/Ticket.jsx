@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Search, X, Info, Clock, AlertCircle, HardDrive } from 'lucide-react';
+import { Search, X, Info, HardDrive } from 'lucide-react';
 import supabase from '../../config/supabaseClient';
 import './Ticket.css';
 
@@ -9,25 +9,45 @@ const Ticket = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchTickets = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('Ticket') 
+        .select('*')
+        // This sorts 'attending' and 'pending' to the top of the list
+        .order('status', { ascending: true }) 
+        .limit(1000); 
+      
+      if (error) throw error;
+      if (data) setTickets(data);
+    } catch (err) {
+      console.error("Supabase Error:", err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchTickets = async () => {
-      setLoading(true);
-      try {
-        // --- 1. TABLE NAME GOES HERE ---
-        const { data, error } = await supabase
-          .from('Ticket') 
-          .select('*');
-        
-        if (error) throw error;
-        if (data) setTickets(data);
-      } catch (err) {
-        console.error("Supabase Error:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTickets();
   }, []);
+
+  const handleStatusChange = async (ticketId, newStatus) => {
+    try {
+      const { error } = await supabase
+        .from('Ticket')
+        .update({ status: newStatus })
+        .eq('TicketID', ticketId);
+
+      if (error) throw error;
+      
+      setTickets(prev => prev.map(t => 
+        t.TicketID === ticketId ? { ...t, status: newStatus } : t
+      ));
+    } catch (err) {
+      alert("Failed to update status.");
+    }
+  };
 
   const filteredTickets = tickets.filter(t => {
     const id = t.TicketID?.toString() || "";
@@ -42,16 +62,17 @@ const Ticket = () => {
       <header className="glass-header">
         <div className="header-text">
           <h1>Maintenance Tickets</h1>
-          <p>Active Incidents: {tickets.length}</p>
+          <p>Displaying Top {tickets.length} Active Incidents</p>
         </div>
         <div className="search-box">
           <Search size={18} className="search-icon" />
           <input 
             type="text" 
-            placeholder="Search TicketID or Machine..." 
+            placeholder="Search TicketID..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <button className="refresh-btn" onClick={fetchTickets} style={{marginLeft: '10px', background: 'none', border: '1px solid #4ecca3', color: '#4ecca3', borderRadius: '5px', cursor: 'pointer', padding: '5px'}}>Refresh</button>
         </div>
       </header>
 
@@ -61,7 +82,6 @@ const Ticket = () => {
             <tr>
               <th>ID</th>
               <th>MACHINE</th>
-              <th>TYPE</th>
               <th>ASSIGNED TO</th>
               <th>STATUS</th>
               <th>INFO</th>
@@ -77,16 +97,25 @@ const Ticket = () => {
                     <span>{t.machineName}</span>
                   </div>
                 </td>
-                <td><span className="type-tag">{t.ticketType}</span></td>
                 <td>
                   <div className="tech-cell">
-                    {t.attendByName ? t.attendByName : <span className="wait-text">Waiting for MO-SAHH</span>}
+                    {t.attendByName ? (
+                      <span className="assigned-tech-name">{t.attendByName}</span>
+                    ) : (
+                      <span className="wait-text">Waiting for MO-SAHH</span>
+                    )}
                   </div>
                 </td>
                 <td>
-                  <span className={`status-badge ${t.attendStart ? 'active' : 'open'}`}>
-                    {t.attendStart ? 'ATTENDING' : 'OPEN'}
-                  </span>
+                  <select 
+                    className={`status-select ${t.status || 'pending'}`}
+                    value={t.status || 'pending'}
+                    onChange={(e) => handleStatusChange(t.TicketID, e.target.value)}
+                  >
+                    <option value="pending">PENDING</option>
+                    <option value="attending">ATTENDING</option>
+                    <option value="completed">COMPLETED</option>
+                  </select>
                 </td>
                 <td>
                   <button className="detail-btn" onClick={() => setSelectedTicket(t)}>
@@ -99,14 +128,13 @@ const Ticket = () => {
         </table>
       </div>
 
-      {/* --- DETAIL MODAL --- */}
       {selectedTicket && (
         <div className="modal-overlay" onClick={() => setSelectedTicket(null)}>
           <div className="modal-content glass-card ticket-modal" onClick={e => e.stopPropagation()}>
             <button className="close-btn" onClick={() => setSelectedTicket(null)}><X /></button>
             <div className="modal-header">
               <h2>Ticket Details: #{selectedTicket.TicketID}</h2>
-              <p>{selectedTicket.machineName} | {selectedTicket.LineName}</p>
+              <p>{selectedTicket.machineName} | {selectedTicket.LineName || "Main Line"}</p>
             </div>
             
             <div className="ticket-details-grid">

@@ -1,18 +1,76 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../../config/supabaseClient";
-import { Upload, Play, CheckCircle } from 'lucide-react';
+import { Upload, Loader2, AlertCircle, Terminal, History } from 'lucide-react';
 import "./Schedule.css";
 
 const Schedule = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [results, setResults] = useState([]); 
+  const [rawOutput, setRawOutput] = useState([]);
+  const [scenarios, setScenarios] = useState([]); 
+  const [scenarioName, setScenarioName] = useState("");
 
-  // Mock Data for the Sequence-based Gantt
-  const scheduleData = [
-    { tech: "Ahmad", tasks: ["T-001", "T-005", "T-009"], color: "#4ecca3" },
-    { tech: "Sarah", tasks: ["T-002", "T-004"], color: "#3b82f6" },
-    { tech: "Logen", tasks: ["T-003", "T-007", "T-008", "T-012"], color: "#a855f7" },
-  ];
+  const colors = ["#4ecca3", "#3b82f6", "#a855f7", "#facc15", "#ff4d4d"];
+
+  useEffect(() => {
+    fetchScenarios();
+  }, []);
+
+  const fetchScenarios = async () => {
+    const { data } = await supabase
+      .from('Optimization_Results')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (data) setScenarios(data);
+  };
+
+  const processOptimization = async (file) => {
+    if (!file) return;
+    
+    if (!scenarioName) {
+      alert("Please enter a Scenario Name first (e.g. PI04_Initial)");
+      return;
+    }
+
+    setIsProcessing(true);
+    setResults([]); 
+    setRawOutput([]);
+    
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      // API call with scenario_name as query param
+      const response = await fetch(`http://127.0.0.1:8000/optimize?scenario_name=${encodeURIComponent(scenarioName)}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      
+      if (data.status === "success") {
+        const finalResult = Array.isArray(data.result) ? data.result : [];
+        setResults(finalResult); 
+        
+        setRawOutput(finalResult.map(res => 
+          `ALGORITHM: Tech ${res.tech} optimized with ${res.tickets.length} tasks.`
+        ));
+        
+        fetchScenarios(); // Refresh history list
+        alert("MO-SAHH Algorithm: Optimization Complete & Saved!");
+      } else {
+        throw new Error(data.message || "Optimization failed");
+      }
+    } catch (error) {
+      console.error("Connection Error:", error);
+      alert("Error: " + error.message);
+    } finally {
+      setIsProcessing(false);
+      // Reset file input value so same file can be uploaded again if needed
+      document.getElementById('fileInput').value = "";
+    }
+  };
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -22,13 +80,14 @@ const Schedule = () => {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    setIsProcessing(true);
-    
-    // Simulate MO-SAHH algorithm trigger
-    setTimeout(() => {
-      setIsProcessing(false);
-      alert("MO-SAHH Algorithm: Optimization Complete!");
-    }, 2000);
+    const file = e.dataTransfer.files[0];
+    if (file) processOptimization(file);
+  };
+
+  // Fixed Select Button Logic
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) processOptimization(file);
   };
 
   return (
@@ -36,12 +95,30 @@ const Schedule = () => {
       <header className="glass-header">
         <div className="header-text">
           <h1>Optimization Engine</h1>
-          <p>Sequence-based Technician Assignment</p>
+          <p>MATLAB-Powered MO-SAHH Scheduler</p>
         </div>
-        {isProcessing && <span className="loader-text">🤖 Algorithm Running...</span>}
+        {isProcessing && (
+          <div className="status-loader">
+            <Loader2 className="spin" size={18} />
+            <span>MO-SAHH Executing...</span>
+          </div>
+        )}
       </header>
 
-      {/* 1. DROP ZONE */}
+      {/* Scenario Name Input Section */}
+      <section className="glass-card scenario-input-panel">
+        <div className="input-row">
+          <History size={18} color="#4ecca3" />
+          <input 
+            type="text" 
+            placeholder="Step 1: Enter Scenario Name (e.g. PI04_Run1)" 
+            value={scenarioName}
+            onChange={(e) => setScenarioName(e.target.value)}
+          />
+        </div>
+      </section>
+
+      {/* Drop Zone with Fixed Select Button */}
       <section 
         className={`drop-zone ${isDragging ? "active" : ""}`}
         onDragOver={handleDrag}
@@ -50,47 +127,94 @@ const Schedule = () => {
       >
         <div className="drop-content">
           <Upload size={40} color={isDragging ? "#4ecca3" : "#94a3b8"} />
-          <h3>Drop Ticket Dataset</h3>
-          <p>Drag & drop txt file to trigger **MO-SAHH** optimization</p>
-          <button className="neon-btn">Select File</button>
+          <h3>Step 2: Drop Ticket Dataset</h3>
+          <p>Drag & drop <strong>input.txt</strong> or click select</p>
+          
+          <input 
+            type="file" 
+            id="fileInput" 
+            hidden 
+            onChange={handleFileSelect} 
+            accept=".txt" 
+          />
+          
+          <button 
+            className="neon-btn" 
+            type="button"
+            onClick={() => document.getElementById('fileInput').click()}
+          >
+            Select File
+          </button>
         </div>
       </section>
 
-      {/* 2. SEQUENCE GANTT CHART */}
       <section className="glass-card schedule-viz">
-        <h3>Assignment Timeline (By Ticket Sequence)</h3>
+        <h3>Assignment Timeline (Gantt Visualization)</h3>
         <div className="gantt-container">
-          {scheduleData.map((row, idx) => (
-            <div key={idx} className="gantt-row">
-              <div className="gantt-label">
-                <div className="avatar-mini">{row.tech[0]}</div>
-                <span>{row.tech}</span>
-              </div>
-              <div className="gantt-track">
-                {row.tasks.map((task, tIdx) => (
-                  <div 
-                    key={tIdx} 
-                    className="gantt-block" 
-                    style={{ backgroundColor: row.color }}
-                  >
-                    {task}
+          {results.length > 0 ? (
+            results.map((row, idx) => (
+              <div key={idx} className="gantt-row">
+                <div className="gantt-label">
+                  <div className="avatar-mini" style={{backgroundColor: colors[idx % colors.length] + '44'}}>
+                    {String(row.tech).slice(-2)}
                   </div>
-                ))}
+                  <span>Tech {String(row.tech).slice(-4)}</span>
+                </div>
+                <div className="gantt-track">
+                  {row.tickets.map((ticket, tIdx) => (
+                    <div 
+                      key={tIdx} 
+                      className="gantt-block" 
+                      style={{ backgroundColor: colors[idx % colors.length] }}
+                    >
+                      T-{String(ticket)}
+                    </div>
+                  ))}
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="empty-gantt">
+              <AlertCircle size={20} />
+              <p>Waiting for algorithm output...</p>
             </div>
-          ))}
-          
-          {/* X-AXIS Labels */}
-          <div className="gantt-axis">
-            <div className="axis-spacer"></div>
-            <div className="axis-labels">
-              <span>Sequence 1</span>
-              <span>Sequence 2</span>
-              <span>Sequence 3</span>
-              <span>Sequence 4</span>
-              <span>Sequence 5</span>
-            </div>
+          )}
+        </div>
+      </section>
+
+      {rawOutput.length > 0 && (
+        <section className="glass-card debug-terminal">
+          <div className="terminal-header">
+            <Terminal size={14} /> <span>MO-SAHH_V2_LOG</span>
           </div>
+          <div className="terminal-content">
+            {rawOutput.map((line, index) => (
+              <div key={index} className="terminal-line">
+                <span className="timestamp">[{new Date().toLocaleTimeString()}]</span>
+                <span className="success-text">{line}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Scenario History Section */}
+      <section className="glass-card scenario-history-list">
+        <h3>Scenario History (Saved States)</h3>
+        <div className="history-grid">
+          {scenarios.map((s) => (
+            <button 
+              key={s.id} 
+              className={`history-item ${scenarioName === s.scenario_name ? "active-history" : ""}`} 
+              onClick={() => { 
+                setResults(s.result_data); 
+                setScenarioName(s.scenario_name); 
+              }}
+            >
+              <strong>{s.scenario_name}</strong>
+              <small>{new Date(s.created_at).toLocaleString()}</small>
+            </button>
+          ))}
         </div>
       </section>
     </main>

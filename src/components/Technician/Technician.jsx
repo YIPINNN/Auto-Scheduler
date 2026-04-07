@@ -5,34 +5,47 @@ import './Technician.css';
 
 const Technician = () => {
   const [technicians, setTechnicians] = useState([]);
+  const [allTickets, setAllTickets] = useState([]); // Real-time ticket state
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [selectedTech, setSelectedTech] = useState(null); // State for the Modal
+  const [selectedTech, setSelectedTech] = useState(null);
 
   useEffect(() => {
-    const fetchTechnicians = async () => {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('Technician')
-        .select('*');
-      
-      if (data) {
-        console.log("Fetched Data:", data[0]); // Check column names in console
-        setTechnicians(data);
-      }
-      if (error) console.error("Supabase Error:", error);
-      setLoading(false);
-    };
-    fetchTechnicians();
+    fetchData();
   }, []);
 
+  const fetchData = async () => {
+    setLoading(true);
+    // Fetch both Technicians and their assigned tickets in parallel
+    const [techRes, ticketRes] = await Promise.all([
+      supabase.from('Technician').select('*'),
+      supabase.from('Ticket').select('*').in('status', ['pending', 'attending'])
+    ]);
+
+    if (techRes.data) setTechnicians(techRes.data);
+    if (ticketRes.data) setAllTickets(ticketRes.data);
+    
+    setLoading(false);
+  };
+
   const filteredTechs = technicians.filter(tech => {
-    const name = tech['Full Name'] || tech.fullName || "";
-    const id = tech['Employee ID'] || tech.employeeID || "";
+    const name = tech.fullName || "";
+    const id = tech.employeeID || "";
     return name.toLowerCase().includes(searchTerm.toLowerCase()) || id.toString().includes(searchTerm);
   });
 
-  if (loading) return <div className="dashboard-content"><p>Loading personnel...</p></div>;
+  // Helper to get tickets for a specific tech
+  const getTechTickets = (techId) => {
+    return allTickets.filter(t => String(t.attendById) === String(techId));
+  };
+
+  if (loading) {
+    return (
+      <div className="dashboard-content">
+        <div className="loader-text">ACCESSING PERSONNEL REGISTRY...</div>
+      </div>
+    );
+  }
 
   return (
     <main className="dashboard-content">
@@ -54,17 +67,19 @@ const Technician = () => {
 
       <div className="tech-grid">
         {filteredTechs.map((tech, index) => {
-          // Mapping CSV Columns to variables
-          const name = tech['Full Name'] || tech.fullName || "Unknown";
-          const id = tech['Employee ID'] || tech.employeeID || "N/A";
-          const jobTitle = tech['Job Title'] || tech.jobTitle || "Technician";
-          const group = tech['TargetGroup'] || tech.targetGroup || "General";
-          const status = tech['Status'] || tech.status || "Inactive";
-          const email = tech['Email'] || tech.email || "No Email";
+          const name = tech.fullName || "Unknown";
+          const id = tech.employeeID || "N/A";
+          const jobTitle = tech.jobTitle || "Technician";
+          const group = tech.targetGroup || "General";
+          const email = tech.email || "No Email";
+          
+          // Real-time Status Calculation
+          const activeTickets = getTechTickets(id);
+          const isAttending = activeTickets.some(t => t.status === 'attending');
+          const status = isAttending ? "Active" : activeTickets.length > 0 ? "Assigned" : "Available";
 
           return (
-            <div key={id + index} className="glass-card tech-card">
-              {/* Optional: Add a small badge for the TargetGroup */}
+            <div key={id} className="glass-card tech-card">
               <div className="dept-tag">{group}</div>
 
               <div className="tech-card-header">
@@ -85,7 +100,7 @@ const Technician = () => {
                 
                 <div className="detail-row">
                   <Users size={16} className="icon-blue" />
-                  <span>Team: <strong>{group}</strong></span>
+                  <span>Queue: <strong>{activeTickets.length} Tickets</strong></span>
                 </div>
 
                 <div className="detail-row">
@@ -96,11 +111,7 @@ const Technician = () => {
 
               <button 
                 className="view-schedule-btn" 
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevents conflicts
-                  console.log("Opening tech:", tech['Full Name']); // Check your console (F12)
-                  setSelectedTech(tech);
-                }}
+                onClick={() => setSelectedTech(tech)}
               >
                 ALLOCATION PROFILE
               </button>
@@ -111,17 +122,32 @@ const Technician = () => {
 
       {/* --- ALLOCATION PROFILE MODAL --- */}
       {selectedTech && (() => {
-        // Extract values once with fallbacks to prevent "undefined[0]" errors
-        const name = selectedTech['Full Name'] || selectedTech.fullName || "Technician";
-        const job = selectedTech['Job Title'] || selectedTech.jobTitle || "Specialist";
+        const techId = selectedTech.employeeID;
+        const name = selectedTech.fullName || "Technician";
+        const job = selectedTech.jobTitle || "Specialist";
+        // 1. Get all tickets for this technician
+        const rawTickets = getTechTickets(techId);
+
+        // 2. Sort the sequence: ATTENDING first, then PENDING (Ascending by TicketID or Database Order)
+        const techTickets = [...rawTickets].sort((a, b) => {
+          // If one is attending and the other isn't, put attending first
+          if (a.status === 'attending' && b.status !== 'attending') return -1;
+          if (a.status !== 'attending' && b.status === 'attending') return 1;
+          
+          // For pending tickets, we want to follow the "bottom-to-top" logic 
+          // If your Database/Algorithm provides a specific order, sort by ID or Created At
+          return a.TicketID - b.TicketID; 
+        });
         
+        // Dynamic Utility Calculation (Simulated logic based on task count)
+        const utility = Math.min(techTickets.length * 20, 100); 
+
         return (
           <div className="modal-overlay" onClick={() => setSelectedTech(null)}>
             <div className="modal-content glass-card" onClick={e => e.stopPropagation()}>
               <button className="close-btn" onClick={() => setSelectedTech(null)}><X /></button>
               
               <div className="modal-header">
-                {/* Safe access to first letter */}
                 <div className="avatar-large">{name[0]}</div>
                 <div>
                   <h2>{name}</h2>
@@ -132,33 +158,43 @@ const Technician = () => {
               <div className="modal-stats-grid">
                 <div className="mini-stat">
                   <Activity size={18} className="icon-green" />
-                  <div><p className="label">Utility</p><p className="val">84%</p></div>
+                  <div><p className="label">Current Utility</p><p className="val">{utility}%</p></div>
                 </div>
                 <div className="mini-stat">
                   <Clock size={18} className="icon-blue" />
-                  <div><p className="label">Avg Response</p><p className="val">14m</p></div>
+                  <div><p className="label">Tasks in Queue</p><p className="val">{techTickets.length}</p></div>
                 </div>
               </div>
 
               <div className="allocation-viz">
-                <h3>Task Distribution</h3>
+                <h3>Real-time Task Distribution</h3>
                 <div className="progress-stack">
-                  <div className="progress-segment mfg" style={{width: '60%'}}>60% Tasks</div>
-                  <div className="progress-segment travel" style={{width: '25%'}}>25% Travel</div>
-                  <div className="progress-segment idle" style={{width: '15%'}}>15% Idle</div>
+                  <div className="progress-segment mfg" style={{width: `${utility}%`}}>{utility}% Busy</div>
+                  <div className="progress-segment idle" style={{width: `${100 - utility}%`}}>{100 - utility}% Available</div>
                 </div>
               </div>
 
               <div className="assigned-tickets">
-                <h3>Current Sequence</h3>
-                <div className="mini-ticket"><span>#T-8821</span> <strong>Machine A-01</strong></div>
-                <div className="mini-ticket"><span>#T-8845</span> <strong>Machine B-04</strong></div>
+                <h3>Current Sequence (Optimization Output)</h3>
+                {techTickets.length > 0 ? techTickets.map((t, idx) => (
+                  <div key={t.TicketID} className={`mini-ticket ${t.status}`}>
+                    <div className="ticket-main-info">
+                      <span className="sequence-number">{idx + 1}</span>
+                      <span className="t-id">#T-{t.TicketID}</span>
+                      <strong className="m-name">{t.machineName || "N/A"}</strong>
+                    </div>
+                    <span className={`status-badge ${t.status}`}>
+                      {t.status === 'attending' ? 'IN PROGRESS' : 'NEXT'}
+                    </span>
+                  </div>
+                )) : (
+                  <p className="empty-text">No tickets currently assigned.</p>
+                )}
               </div>
             </div>
           </div>
         );
       })()}
-
     </main>
   );
 };

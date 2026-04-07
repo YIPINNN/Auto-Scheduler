@@ -1,0 +1,29 @@
+===== FINAL ASSIGNMENT =====
+Technician 1000274402:
+  4
+Technician 1000286793:
+  5
+Technician 1000302035:
+  0009
+Technician 1000302075:
+  3
+Technician 1000306096:
+  0008
+Technician 1000404534:
+  0014
+Technician 1000405724:
+  0016
+Technician 1000405727:
+  0012
+Technician 26604:
+  0011
+  6
+Technician 39306:
+  7
+  0010
+  0013
+  0015
+
+Final Objectives:
+Variance: 0.8437
+Penalty: 0.0000
