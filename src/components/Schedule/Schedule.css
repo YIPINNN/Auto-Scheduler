@@ -231,3 +231,38 @@
 
 .history-item strong { color: #fff; font-size: 0.9rem; }
 .history-item small { color: #64748b; font-size: 0.7rem; margin-top: 5px; }
+
+.gantt-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 20px;
+}
+
+.gantt-label {
+  flex-shrink: 0;
+  /* Match the width we discussed for the dashboard */
+  width: 220px; 
+}
+
+.gantt-track {
+  display: flex;
+  gap: 8px;
+  flex-grow: 1;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px;
+  border-radius: 12px;
+  overflow-x: auto; /* Adds horizontal scroll if there are too many tickets */
+}
+
+.gantt-block {
+  padding: 8px 15px;
+  border-radius: 6px;
+  color: #0f172a;
+  font-weight: 800;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 60px;
+  text-align: center;
+}

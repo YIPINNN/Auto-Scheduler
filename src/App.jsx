@@ -5,17 +5,39 @@ import Ticket from './components/Ticket/Ticket';
 import Technician from './components/Technician/Technician';
 import Notification from './components/Notification/Notification';
 import Performance from './components/Performance/Performance';
+import Login from './components/Login/Login'; // Integrated Login
+import Account from './components/Account/Account'; // Integrated Account
 import supabase from './config/supabaseClient';
 import './App.css';
 
 function App() {
+  // 1. Initialize state from localStorage so it persists on refresh
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('mosahh_session');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [currentPage, setCurrentPage] = useState('Dashboard');
   const [technicians, setTechnicians] = useState([]);
   const [allTickets, setAllTickets] = useState([]); 
   const [optimizationScore, setOptimizationScore] = useState(0);
 
+  // --- AUTHENTICATION HANDLERS ---
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem('mosahh_session', JSON.stringify(userData));
+    setCurrentPage('Dashboard');
+  };
+
+  // 3. Updated Logout Handler to clear localStorage
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('mosahh_session');
+    setCurrentPage('Dashboard');
+  };
+  
   // --- DATA FETCHING ---
   const fetchData = async () => {
+    if (!user) return; // Guard: Only fetch if authenticated
     try {
       const { data: techData } = await supabase.from('Technician').select('*');
       const { data: ticketData } = await supabase.from('Ticket')
@@ -35,11 +57,41 @@ function App() {
     }
   };
 
+  // 2. Single useEffect to handle Data Fetching and Auth Persistence
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 10000);
-    return () => clearInterval(interval);
+    // Only fetch data if we have a user
+    if (user) {
+      fetchData();
+      const interval = setInterval(fetchData, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [user]); // This triggers immediately when user state is set
+
+  // 3. Separate useEffect for the Supabase Auth Listener (The Persistence Layer)
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        const userData = {
+          id: session.user.id,
+          email: session.user.email,
+          name: "System Administrator",
+          role: "Manager"
+        };
+        setUser(userData);
+        localStorage.setItem('mosahh_session', JSON.stringify(userData));
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        localStorage.removeItem('mosahh_session');
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  // --- LOGIN GUARD ---
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   const getTechLoad = (techId) => {
     const techTasks = allTickets.filter(t => String(t.attendById) === String(techId));
@@ -48,6 +100,7 @@ function App() {
 
   const DashboardView = () => {
     const pendingList = allTickets.filter(t => t.status === 'pending');
+    const availableTechs = technicians.filter(t => t.isAvailable ?? true);
     
     return (
       <main className="dashboard-content">
@@ -79,14 +132,13 @@ function App() {
           <div className="stat-glass-card" style={{ '--accent': '#3b82f6' }}>
             <span className="stat-icon">👥</span>
             <div>
-              <p className="stat-val">{technicians.length}</p>
-              <p className="stat-label">Active Resources</p>
+              <p className="stat-val">{availableTechs.length}</p>
+              <p className="stat-label">Available Resources (of {technicians.length})</p>
             </div>
           </div>
         </section>
 
         <div className="grid-container">
-          {/* Main Visualizer: Technician Load with internal scroll */}
           <section className="glass-card main-viz" style={{ display: 'flex', flexDirection: 'column', height: '500px' }}>
             <h3>Live Resource Load (Sorted by Utility)</h3>
             <div className="visual-timeline" style={{ flex: 1, overflowY: 'auto', paddingRight: '10px', marginTop: '15px' }}>
@@ -94,15 +146,21 @@ function App() {
                 .sort((a, b) => getTechLoad(b.employeeID) - getTechLoad(a.employeeID))
                 .map(tech => {
                   const load = getTechLoad(tech.employeeID);
+                  const isOffDuty = tech.isAvailable === false;
+
                   return (
-                    <div key={tech.employeeID} className="timeline-row">
+                    <div key={tech.employeeID} className={`timeline-row ${isOffDuty ? 'off-duty-row' : ''}`}>
                       <div className="tech-profile">
-                        {/* Fixed Size Avatar */}
-                        <div className="avatar-mini" style={{ width: '40px', height: '40px', minWidth: '40px', flexShrink: 0 }}>
+                        <div className="avatar-mini" style={{ 
+                          width: '40px', height: '40px', minWidth: '40px', flexShrink: 0,
+                          opacity: isOffDuty ? 0.4 : 1 
+                        }}>
                           {tech.fullName ? tech.fullName[0] : 'T'}
                         </div>
                         <div className="tech-meta">
-                          <p className="tech-name">{tech.fullName}</p>
+                          <p className="tech-name" style={{ color: isOffDuty ? '#64748b' : '#f8fafc' }}>
+                            {tech.fullName} {isOffDuty && "(Off-Duty)"}
+                          </p>
                           <small>ID: {tech.employeeID}</small>
                         </div>
                       </div>
@@ -111,8 +169,9 @@ function App() {
                           className="glow-bar" 
                           style={{ 
                             width: `${load}%`, 
-                            backgroundColor: load >= 80 ? '#ff4d4d' : '#4ecca3',
-                            transition: 'width 0.5s ease-in-out'
+                            backgroundColor: isOffDuty ? '#334155' : (load >= 80 ? '#ff4d4d' : '#4ecca3'),
+                            transition: 'width 0.5s ease-in-out',
+                            opacity: isOffDuty ? 0.5 : 1
                           }}
                         >
                           {load > 0 ? `${load}%` : '0%'}
@@ -124,7 +183,6 @@ function App() {
             </div>
           </section>
 
-          {/* Right Panel: Pending Tickets with internal scroll */}
           <section className="glass-card attendance-panel" style={{ height: '500px' }}>
             <div className="panel-header">
                <h3>Live Queue</h3>
@@ -154,11 +212,12 @@ function App() {
       <Sidebar onNavigate={setCurrentPage} activePage={currentPage} />
       <div className="main-content-wrapper">
         {currentPage === 'Dashboard' && <DashboardView />}
-        {currentPage === 'Schedule' && <Schedule />}
+        {currentPage === 'Schedule' && <Schedule technicians={technicians} />}
         {currentPage === 'Tickets' && <Ticket />}
         {currentPage === 'Technicians' && <Technician />}
         {currentPage === 'Notification' && <Notification />}
         {currentPage === 'Performance' && <Performance />}
+        {currentPage === 'Account' && <Account user={user} onLogout={handleLogout} />}
       </div>
     </div>
   );

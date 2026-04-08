@@ -15,12 +15,18 @@ const Notification = () => {
 
   const fetchNotificationLogs = async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('Ticket')
-      .select('*')
-      .not('attendByName', 'is', null) 
-      .order('TicketID', { ascending: false });
-    if (data) setLogs(data);
+    try {
+      const { data } = await supabase
+        .from('Ticket')
+        .select('*')
+        .not('attendByName', 'is', null) 
+        // SORT: Ascending (Oldest assignments at the top)
+        .order('TicketID', { ascending: true }); 
+        
+      if (data) setLogs(data);
+    } catch (err) {
+      console.error("Notification Fetch Error:", err);
+    }
     setLoading(false);
   };
 

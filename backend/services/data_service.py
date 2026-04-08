@@ -26,12 +26,14 @@ def get_alarm_code():
 def save_assignments(data):
     supabase.table("assignments").insert(data).execute()
 
-def save_scenario_to_supabase(scenario_name, assignments):
+def save_scenario_to_supabase(scenario_name, assignments, comp_time):
     """Saves the final MATLAB JSON result into the history table."""
     try:
         data = {
             "scenario_name": scenario_name,
-            "result_data": assignments # This matches the jsonb column
+            "result_data": assignments,
+            "computation_time": comp_time, # Store as a float/number
+            "created_at": "now()"
         }
         return supabase.table("Optimization_Results").insert(data).execute()
     except Exception as e:

@@ -1,0 +1,104 @@
+Experiment ID: 411253 
+----------------------
+Start Time: 2026-04-08 11:47:41 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+----------------------
+Use PSF: 1 
+No. of PSF: 6 
+Initial HH Blocks: 2 
+Max HH Blocks: 10 
+Initial Temperature: 1.0000 
+Min Temperature: 0.0010 
+Cooling Rate: 0.9500 
+Objectives: Workload Variance & Penalty 
+------------------------------------------------------------------
+
+===== RUN 1 =====
+Initial Solution:
+Variance: 1.9748
+Penalty: 2.0000
+----------------------
+
+===== FINAL ASSIGNMENT =====
+Technician 1000274402:
+  4
+Technician 1000286793:
+  0012
+Technician 1000298435:
+  12
+Technician 1000302075:
+  3
+Technician 1000305256:
+  16
+Technician 1000305966:
+  8
+Technician 1000306096:
+  9
+Technician 1000312496:
+  5
+Technician 1000404594:
+  0008
+Technician 1000404653:
+  0011
+  11
+Technician 1000405431:
+  0014
+  14
+Technician 1000405627:
+  0016
+Technician 1000405727:
+  0009
+Technician 1000405856:
+  6
+Technician 39306:
+  0015
+  0013
+  0010
+  13
+  10
+  15
+  7
+
+Final Objectives:
+Variance: 1.9748
+Penalty: 2.0000
+
+Statistics:
+No of Acceptance: 1
+No of Rejection: 0
+Iterations: 30
+
+===== PARETO FRONT =====
+Solution 1 (Obj: [1.9748 2.0000])
+Invalid assignment format
+----------------------
+Solution 2 (Obj: [1.9748 2.0000])
+Ticket 4 → Tech 1000274402
+Ticket 5 → Tech 1000312496
+Ticket 6 → Tech 1000405856
+Ticket 7 → Tech 39306
+Ticket 3 → Tech 1000302075
+Ticket 9 → Tech 1000306096
+Ticket 14 → Tech 1000405431
+Ticket 12 → Tech 1000298435
+Ticket 15 → Tech 39306
+Ticket 8 → Tech 1000305966
+Ticket 11 → Tech 1000404653
+Ticket 10 → Tech 39306
+Ticket 16 → Tech 1000305256
+Ticket 13 → Tech 39306
+Ticket 0008 → Tech 1000404594
+Ticket 0009 → Tech 1000405727
+Ticket 0010 → Tech 39306
+Ticket 0011 → Tech 1000404653
+Ticket 0012 → Tech 1000286793
+Ticket 0013 → Tech 39306
+Ticket 0014 → Tech 1000405431
+Ticket 0015 → Tech 39306
+Ticket 0016 → Tech 1000405627
+----------------------
+
+===== FINAL SUMMARY =====
+Run 1 Pareto Size: 2
+End Time: 2026-04-08 11:48:19
+Execution Time: 00:00:37

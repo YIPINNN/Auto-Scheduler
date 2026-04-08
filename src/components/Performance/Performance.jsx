@@ -1,13 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   LineChart, Line, Legend, Cell, AreaChart, Area 
 } from 'recharts';
-import { Activity, Clock, CheckCircle, Zap, Target, TrendingUp } from 'lucide-react';
+import { Activity, Clock, Zap, Target, History } from 'lucide-react';
+import supabase from '../../config/supabaseClient';
 import './Performance.css';
 
 const Performance = () => {
-  // Mock Data: MO-SAHH Algorithm Efficiency (Makespan reduction over time)
+  const [computeHistory, setComputeHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // --- FETCH REAL-TIME DATA FROM BACKEND RUNS ---
+  useEffect(() => {
+    const fetchPerformanceData = async () => {
+      const { data } = await supabase
+        .from('Optimization_Results')
+        .select('scenario_name, computation_time, created_at')
+        .order('created_at', { ascending: true })
+        .limit(10);
+      
+      if (data) setComputeHistory(data);
+      setLoading(false);
+    };
+
+    fetchPerformanceData();
+  }, []);
+
+  // Calculate Avg Compute Time from Real Data
+  const avgComputeTime = computeHistory.length > 0 
+    ? (computeHistory.reduce((acc, curr) => acc + (curr.computation_time || 0), 0) / computeHistory.length).toFixed(3)
+    : "0.000";
+
+  // --- MOCK DATA FOR THEORETICAL ANALYSIS ---
   const algorithmEfficiency = [
     { iteration: 'Iter 1', makespan: 120, baseline: 150 },
     { iteration: 'Iter 10', makespan: 110, baseline: 150 },
@@ -16,7 +41,6 @@ const Performance = () => {
     { iteration: 'Iter 200', makespan: 42, baseline: 150 },
   ];
 
-  // Mock Data: Workload Heatmap (Technician Utilization %)
   const workloadData = [
     { name: 'Aiman', load: 85 },
     { name: 'Haliza', load: 62 },
@@ -27,8 +51,8 @@ const Performance = () => {
   ];
 
   const kpis = [
-    { label: "Makespan Reduction", val: "72%", icon: <Zap />, color: "#4ecca3" },
-    { label: "Avg. Resolution", val: "14.2m", icon: <Clock />, color: "#3b82f6" },
+    { label: "Avg. Compute Time", val: `${avgComputeTime}s`, icon: <History />, color: "#4ecca3" },
+    { label: "Makespan Reduction", val: "72%", icon: <Zap />, color: "#3b82f6" },
     { label: "OEE Performance", val: "91.5%", icon: <Activity />, color: "#a855f7" },
     { label: "Success Rate", val: "98.2%", icon: <Target />, color: "#facc15" },
   ];
@@ -37,7 +61,7 @@ const Performance = () => {
     <main className="dashboard-content">
       <header className="glass-header">
         <div className="header-text">
-          <h1>Technicians Performance</h1>
+          <h1>System Intelligence & Performance</h1>
           <p>Multi-Objective Simulated Annealing Hyper-Heuristic (MO-SAHH) Analytics</p>
         </div>
       </header>
@@ -58,7 +82,35 @@ const Performance = () => {
       </div>
 
       <div className="charts-grid">
-        {/* Workload Heatmap (Bar Chart) */}
+        {/* NEW: Computation Time Trend (Real Data) */}
+        <div className="glass-card chart-wrapper full-width">
+          <div className="chart-header">
+            <h3>MO-SAHH Computation Time</h3>
+            <span>Backend MO-SAHH Computation Time per Scenario</span>
+          </div>
+          <div className="recharts-box">
+            <ResponsiveContainer width="100%" height={250}>
+              <AreaChart data={computeHistory}>
+                <defs>
+                  <linearGradient id="colorTime" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#4ecca3" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#4ecca3" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="scenario_name" stroke="#94a3b8" fontSize={10} tickLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={10} unit="s" tickLine={false} />
+                <Tooltip 
+                  contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '10px' }}
+                  itemStyle={{ color: '#4ecca3' }}
+                />
+                <Area type="monotone" dataKey="computation_time" stroke="#4ecca3" strokeWidth={3} fillOpacity={1} fill="url(#colorTime)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Workload Heatmap */}
         <div className="glass-card chart-wrapper">
           <div className="chart-header">
             <h3>Technician Workload Heatmap</h3>
@@ -84,7 +136,7 @@ const Performance = () => {
           </div>
         </div>
 
-        {/* Algorithm Performance (Area Chart) */}
+        {/* Algorithm Performance (Convergence) */}
         <div className="glass-card chart-wrapper">
           <div className="chart-header">
             <h3>Algorithm Convergence</h3>

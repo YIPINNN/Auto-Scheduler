@@ -3,7 +3,8 @@ import supabase from "../../config/supabaseClient";
 import { Upload, Loader2, AlertCircle, Terminal, History } from 'lucide-react';
 import "./Schedule.css";
 
-const Schedule = () => {
+// Accepting technicians prop from App.jsx
+const Schedule = ({ technicians = [] }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [results, setResults] = useState([]); 
@@ -12,6 +13,12 @@ const Schedule = () => {
   const [scenarioName, setScenarioName] = useState("");
 
   const colors = ["#4ecca3", "#3b82f6", "#a855f7", "#facc15", "#ff4d4d"];
+
+  // Create a lookup map for names and full details
+  const techLookup = technicians.reduce((acc, tech) => {
+    acc[String(tech.employeeID)] = tech.fullName;
+    return acc;
+  }, {});
 
   useEffect(() => {
     fetchScenarios();
@@ -41,7 +48,6 @@ const Schedule = () => {
     formData.append("file", file);
 
     try {
-      // API call with scenario_name as query param
       const response = await fetch(`http://127.0.0.1:8000/optimize?scenario_name=${encodeURIComponent(scenarioName)}`, {
         method: "POST",
         body: formData,
@@ -53,11 +59,12 @@ const Schedule = () => {
         const finalResult = Array.isArray(data.result) ? data.result : [];
         setResults(finalResult); 
         
-        setRawOutput(finalResult.map(res => 
-          `ALGORITHM: Tech ${res.tech} optimized with ${res.tickets.length} tasks.`
-        ));
+        setRawOutput(finalResult.map(res => {
+          const name = techLookup[String(res.tech)] || "Unknown";
+          return `ALGORITHM: ${name} (ID: ${res.tech}) optimized with ${res.tickets.length} tasks.`;
+        }));
         
-        fetchScenarios(); // Refresh history list
+        fetchScenarios(); 
         alert("MO-SAHH Algorithm: Optimization Complete & Saved!");
       } else {
         throw new Error(data.message || "Optimization failed");
@@ -67,7 +74,6 @@ const Schedule = () => {
       alert("Error: " + error.message);
     } finally {
       setIsProcessing(false);
-      // Reset file input value so same file can be uploaded again if needed
       document.getElementById('fileInput').value = "";
     }
   };
@@ -84,7 +90,6 @@ const Schedule = () => {
     if (file) processOptimization(file);
   };
 
-  // Fixed Select Button Logic
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (file) processOptimization(file);
@@ -105,7 +110,6 @@ const Schedule = () => {
         )}
       </header>
 
-      {/* Scenario Name Input Section */}
       <section className="glass-card scenario-input-panel">
         <div className="input-row">
           <History size={18} color="#4ecca3" />
@@ -118,7 +122,6 @@ const Schedule = () => {
         </div>
       </section>
 
-      {/* Drop Zone with Fixed Select Button */}
       <section 
         className={`drop-zone ${isDragging ? "active" : ""}`}
         onDragOver={handleDrag}
@@ -152,27 +155,62 @@ const Schedule = () => {
         <h3>Assignment Timeline (Gantt Visualization)</h3>
         <div className="gantt-container">
           {results.length > 0 ? (
-            results.map((row, idx) => (
-              <div key={idx} className="gantt-row">
-                <div className="gantt-label">
-                  <div className="avatar-mini" style={{backgroundColor: colors[idx % colors.length] + '44'}}>
-                    {String(row.tech).slice(-2)}
-                  </div>
-                  <span>Tech {String(row.tech).slice(-4)}</span>
-                </div>
-                <div className="gantt-track">
-                  {row.tickets.map((ticket, tIdx) => (
-                    <div 
-                      key={tIdx} 
-                      className="gantt-block" 
-                      style={{ backgroundColor: colors[idx % colors.length] }}
-                    >
-                      T-{String(ticket)}
+            results.map((row, idx) => {
+              const techId = String(row.tech);
+              const fullName = techLookup[techId] || "Unknown Technician";
+              const avatarColor = colors[idx % colors.length];
+
+              return (
+                <div key={idx} className="gantt-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '18px', gap: '20px' }}>
+                  {/* FIXED LABEL AREA: Full Name and Full ID */}
+                  <div className="gantt-label" style={{ width: '220px', minWidth: '220px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div className="avatar-mini" style={{ 
+                        backgroundColor: avatarColor + '44', 
+                        width: '38px', 
+                        height: '38px', 
+                        minWidth: '38px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderRadius: '50%',
+                        fontWeight: '800',
+                        color: avatarColor,
+                        border: `1px solid ${avatarColor}44`
+                    }}>
+                      {fullName[0]}
                     </div>
-                  ))}
+                    <div className="tech-meta" style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', overflow: 'hidden' }}>
+                      <p className="tech-name" style={{ margin: 0, fontSize: '0.9rem', fontWeight: '700', color: '#f8fafc', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                        {fullName}
+                      </p>
+                      <small style={{ color: '#64748b', fontSize: '0.75rem' }}>ID: {techId}</small>
+                    </div>
+                  </div>
+
+                  <div className="gantt-track" style={{ display: 'flex', gap: '8px', flexGrow: 1, padding: '4px' }}>
+                    {row.tickets.map((ticket, tIdx) => (
+                      <div 
+                        key={tIdx} 
+                        className="gantt-block" 
+                        style={{ 
+                            backgroundColor: avatarColor,
+                            padding: '8px 16px',
+                            borderRadius: '8px',
+                            color: '#0f172a',
+                            fontWeight: '800',
+                            fontSize: '0.8rem',
+                            minWidth: '70px',
+                            textAlign: 'center',
+                            boxShadow: `0 4px 10px ${avatarColor}33`
+                        }}
+                      >
+                        T-{String(ticket)}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="empty-gantt">
               <AlertCircle size={20} />
@@ -198,7 +236,6 @@ const Schedule = () => {
         </section>
       )}
 
-      {/* Scenario History Section */}
       <section className="glass-card scenario-history-list">
         <h3>Scenario History (Saved States)</h3>
         <div className="history-grid">

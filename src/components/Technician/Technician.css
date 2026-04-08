@@ -281,3 +281,73 @@
   50% { opacity: 0.3; }
   100% { opacity: 1; }
 }
+
+.availability-control {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.availability-text {
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: #94a3b8;
+}
+
+/* Toggle Switch Styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255,255,255,0.1);
+  transition: .4s;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px; width: 14px;
+  left: 3px; bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider { background-color: #4ecca3; }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Card styling for unavailable techs */
+.tech-card-off-duty {
+  opacity: 0.7;
+  filter: grayscale(0.4);
+  border-color: rgba(255, 77, 77, 0.2) !important;
+  background: rgba(15, 23, 42, 0.6); /* Darker background */
+}
+
+.tech-card-off-duty:hover {
+  filter: grayscale(0); /* Light up when hovered for readability */
+  opacity: 1;
+}
+
+/* Status colors */
+.status-indicator.unavailable {
+  background: rgba(239, 68, 68, 0.1); /* Redish */
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.icon-grey {
+  color: #64748b;
+}

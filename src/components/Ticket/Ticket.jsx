@@ -15,9 +15,8 @@ const Ticket = () => {
       const { data, error } = await supabase
         .from('Ticket') 
         .select('*')
-        // This sorts 'attending' and 'pending' to the top of the list
-        .order('status', { ascending: true }) 
-        .limit(1000); 
+        // SORT: Ascending (1, 2, 3...)
+        .order('TicketID', { ascending: true }); 
       
       if (error) throw error;
       if (data) setTickets(data);

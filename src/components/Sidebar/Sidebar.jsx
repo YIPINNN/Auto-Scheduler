@@ -1,13 +1,12 @@
 import React from 'react';
-
 import { 
   LayoutDashboard, 
   CalendarRange, 
   Users, 
   Ticket as TicketIcon, 
   BarChart3, 
-  Settings, 
-  Send
+  Send,
+  UserCircle // Added for the Account icon
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -19,6 +18,7 @@ const Sidebar = ({ onNavigate, activePage }) => {
     { name: 'Tickets', icon: <TicketIcon size={20} /> },
     { name: 'Notification', icon: <Send size={20} /> },
     { name: 'Performance', icon: <BarChart3 size={20} /> },
+    { name: 'Account', icon: <UserCircle size={20} /> }, // Added without changing structure
   ];
 
   return (
@@ -32,12 +32,14 @@ const Sidebar = ({ onNavigate, activePage }) => {
         {menuItems.map((item) => (
           <button
             key={item.name}
-            type="button" // CRITICAL: Prevents page refresh
+            type="button" 
             className={`nav-item ${activePage === item.name ? 'active' : ''}`}
             onClick={() => onNavigate(item.name)}
           >
             <span className="nav-icon">{item.icon}</span>
-            <span className="nav-label">{item.name}</span>
+            <span className="nav-label">
+              {item.name === 'Account' ? 'Account Detail' : item.name}
+            </span>
             
             {/* Visual indicator for active state */}
             {activePage === item.name && <div className="active-glow" />}

@@ -121,6 +121,7 @@
 #         return {"status": "error", "message": str(e)}
 
 import re
+import time
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from backend.services.file_service import update_config_file, read_result
@@ -154,6 +155,7 @@ app.add_middleware(
 
 @app.post("/optimize")
 async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scenario"):
+    
     try:
         # 1. READ FILE CONTENT (8-16)
         content_bytes = await file.read()
@@ -161,7 +163,18 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         
         # 2. FETCH SYSTEM STATE
         all_db_tickets = get_tickets() or []
-        all_techs = get_technicians() or []
+
+        # 2b. FETCH TECHNICIANS & FILTER
+        raw_techs = get_technicians() or []
+        # ONLY use technicians where isAvailable is True
+        all_techs = [t for t in raw_techs if t.get('isAvailable') == True]
+
+        if not all_techs:
+            return {"status": "error", "message": "No technicians are currently available for assignment!"}
+
+        print(f"--- 👥 RESOURCE CHECK ---")
+        print(f"Total Techs in DB: {len(raw_techs)}")
+        print(f"Available for Assignment: {len(all_techs)}")
         
         print(f"--- DATABASE CHECK ---")
         attending_list = [t for t in all_db_tickets if str(t.get('status')).lower() == 'attending']
@@ -214,14 +227,28 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 
         save_all_to_csv(all_techs, get_target_groups(), get_job_titles(), 
                         get_group_levels(), get_group_job_bridge(), get_alarm_code())
+        
+        # --- START CORE TIMER ---
+        algo_start = time.time()
 
         # 6. EXECUTE MATLAB
         update_config_file()
         run_matlab()
+
+        algo_duration = time.time() - algo_start
+        # --- END CORE TIMER ---
+        print(f"⚡ MO-SAHH Core Computation Time: {algo_duration:.4f}s")
         
         # 7. PROCESS RESULTS
         full_data = read_result() 
         assignments = full_data.get("assignments", [])
+
+        # Save to Supabase (Add 'computation_time' to your save function)
+        save_scenario_to_supabase(
+            scenario_name=scenario_name, 
+            assignments=assignments, 
+            comp_time=algo_duration # Pass the duration here
+        )
         
         # --- NEW: Reverse ticket order for chronological Gantt display ---
         # This makes the last ticket in the text output the FIRST ticket on the chart
@@ -236,7 +263,7 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         # to accept this 4th parameter (ticket_details_map)
         sync_final_results_to_tickets(assignments, tech_map, file.filename, ticket_details_map)
         
-        save_scenario_to_supabase(scenario_name, assignments)
+        #save_scenario_to_supabase(scenario_name, assignments, algo_duration)
 
         # --- 9. AUTOMATIC NOTIFICATION TRIGGER ---
         print("--- TRIGGERING AUTOMATED DISPATCH ---")
@@ -251,7 +278,12 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
                     tech_name=target_tech['fullName'],
                     ticket_list=entry.get('tickets', [])
                 )
-        return {"status": "success", "result": assignments}
+
+        return {
+            "status": "success", 
+            "result": assignments, 
+            "computation_time": f"{algo_duration:.2f}s"
+        }
     
             
 
