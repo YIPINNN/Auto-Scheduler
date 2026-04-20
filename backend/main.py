@@ -128,7 +128,8 @@ from backend.services.file_service import update_config_file, read_result
 from backend.services.matlab_service import run_matlab
 from backend.services.csv_service import save_all_to_csv
 from backend.services.email_service import send_dispatch_notification
-from backend.supabase_client import supabase
+#from backend.supabase_client import supabase
+from backend.supabase_client import get_supabase
 
 # Import data services
 from backend.services.data_service import (
@@ -295,6 +296,8 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 @app.post("/resend-notification/{ticket_id}")
 async def resend_notification(ticket_id: int):
     try:
+        supabase = get_supabase()
+
         # Fetch ticket to find the technician
         ticket = supabase.table("Ticket").select("*").eq("TicketID", ticket_id).single().execute()
         if not ticket.data:

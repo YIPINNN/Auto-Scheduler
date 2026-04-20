@@ -1,0 +1,21 @@
+Experiment ID: 411253 
+----------------------
+Start Time: 2026-04-21 01:29:07 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+----------------------
+Use PSF: 1 
+No. of PSF: 6 
+Initial HH Blocks: 2 
+Max HH Blocks: 10 
+Initial Temperature: 1.0000 
+Min Temperature: 0.0010 
+Cooling Rate: 0.9500 
+Objectives: Workload Variance & Penalty 
+------------------------------------------------------------------
+
+===== RUN 1 =====
+Initial Solution:
+Variance: 0.7261
+Penalty: 2.0000
+----------------------
+Improved Solution at Iter 15: Obj=[0.6672 1.0000]
