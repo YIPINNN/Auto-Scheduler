@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../../config/supabaseClient";
-import { Upload, Loader2, AlertCircle, Terminal, History } from 'lucide-react';
+import { Upload, Loader2, AlertCircle, Terminal, History, RefreshCw } from 'lucide-react';
 import "./Schedule.css";
 
 // Accepting technicians prop from App.jsx
@@ -95,6 +95,49 @@ const Schedule = ({ technicians = [] }) => {
     if (file) processOptimization(file);
   };
 
+  const handleReschedule = async () => {
+    if (!scenarioName) {
+      alert("Please enter a Scenario Name first (e.g. Reschedule_Run1)");
+      return;
+    }
+
+    setIsProcessing(true);
+    setResults([]);
+    
+    // Create an empty file blob to satisfy the 'file' parameter in FastAPI
+    const blob = new Blob([""], { type: 'text/plain' });
+    const dummyFile = new File([blob], "reschedule.txt", { type: "text/plain" });
+
+    const formData = new FormData();
+    formData.append("file", dummyFile);
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/optimize?scenario_name=${encodeURIComponent(scenarioName)}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      
+      if (data.status === "success") {
+        const finalResult = Array.isArray(data.result) ? data.result : [];
+        setResults(finalResult); 
+        
+        setRawOutput(prev => [...prev, `RESCHEDULE: Optimization triggered for existing pending tickets.`]);
+        
+        fetchScenarios(); 
+        alert("Rescheduling Complete!");
+      } else {
+        throw new Error(data.message || "Rescheduling failed");
+      }
+    } catch (error) {
+      console.error("Reschedule Error:", error);
+      alert("Error: " + error.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <main className="dashboard-content">
       <header className="glass-header">
@@ -119,6 +162,28 @@ const Schedule = ({ technicians = [] }) => {
             value={scenarioName}
             onChange={(e) => setScenarioName(e.target.value)}
           />
+
+          <button 
+            className="reschedule-btn"
+            onClick={handleReschedule}
+            disabled={isProcessing}
+            style={{
+              background: 'rgba(78, 204, 163, 0.1)',
+              border: '1px solid #4ecca3',
+              color: '#4ecca3',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontWeight: 'bold',
+              transition: 'all 0.3s'
+            }}
+          >
+            <RefreshCw size={16} className={isProcessing ? "spin" : ""} />
+            Reschedule Pending
+          </button>
         </div>
       </section>
 

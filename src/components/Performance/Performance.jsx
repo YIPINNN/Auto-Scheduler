@@ -16,7 +16,7 @@ const Performance = () => {
     const fetchPerformanceData = async () => {
       const { data } = await supabase
         .from('Optimization_Results')
-        .select('scenario_name, computation_time, created_at')
+        .select('scenarioName, computationTime, created_at')
         .order('created_at', { ascending: true })
         .limit(10);
       
@@ -29,7 +29,7 @@ const Performance = () => {
 
   // Calculate Avg Compute Time from Real Data
   const avgComputeTime = computeHistory.length > 0 
-    ? (computeHistory.reduce((acc, curr) => acc + (curr.computation_time || 0), 0) / computeHistory.length).toFixed(3)
+    ? (computeHistory.reduce((acc, curr) => acc + (curr.computationTime || 0), 0) / computeHistory.length).toFixed(3)
     : "0.000";
 
   // --- MOCK DATA FOR THEORETICAL ANALYSIS ---
@@ -98,13 +98,13 @@ const Performance = () => {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                <XAxis dataKey="scenario_name" stroke="#94a3b8" fontSize={10} tickLine={false} />
+                <XAxis dataKey="scenarioName" stroke="#94a3b8" fontSize={10} tickLine={false} />
                 <YAxis stroke="#94a3b8" fontSize={10} unit="s" tickLine={false} />
                 <Tooltip 
                   contentStyle={{ background: '#0f172a', border: '1px solid #1e293b', borderRadius: '10px' }}
                   itemStyle={{ color: '#4ecca3' }}
                 />
-                <Area type="monotone" dataKey="computation_time" stroke="#4ecca3" strokeWidth={3} fillOpacity={1} fill="url(#colorTime)" />
+                <Area type="monotone" dataKey="computationTime" stroke="#4ecca3" strokeWidth={3} fillOpacity={1} fill="url(#colorTime)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

@@ -190,7 +190,7 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         
         # Process 3-7 from DB
         for t in db_pending_tickets:
-            tid = str(t.get('TicketID'))
+            tid = str(t.get('ticketID'))
             acode = str(t.get('alarmCode') or "0")
             tgrp = str(t.get('targetGroup') or "TECH")
             
@@ -244,6 +244,32 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         full_data = read_result() 
         assignments = full_data.get("assignments", [])
 
+        # ... (Step 7: Process Results) ...
+        full_data = read_result() 
+        assignments = full_data.get("assignments", [])
+
+        # --- NEW: Identify Unassigned Tickets ---
+        assigned_ticket_ids = set()
+        for entry in assignments:
+            for t_id in entry.get('tickets', []):
+                assigned_ticket_ids.add(str(t_id))
+
+        unassigned_tickets = []
+        for tid, details in ticket_details_map.items():
+            if tid not in assigned_ticket_ids:
+                unassigned_tickets.append({
+                    "ticketID": tid,
+                    "alarmCode": details['alarm'],
+                    "targetGroup": details['group'],
+                    "status": "Unassigned", # Mark clearly for frontend
+                    "attendById": None      # Explicitly null
+                })
+        
+        # Log for debugging
+        print(f"Total Tickets: {len(ticket_details_map)}")
+        print(f"Assigned: {len(assigned_ticket_ids)}")
+        print(f"Unassigned: {len(unassigned_tickets)}")
+
         # Save to Supabase (Add 'computation_time' to your save function)
         save_scenario_to_supabase(
             scenario_name=scenario_name, 
@@ -283,7 +309,7 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         return {
             "status": "success", 
             "result": assignments, 
-            "computation_time": f"{algo_duration:.2f}s"
+            "computationTime": f"{algo_duration:.2f}s"
         }
     
             
@@ -299,7 +325,7 @@ async def resend_notification(ticket_id: int):
         supabase = get_supabase()
 
         # Fetch ticket to find the technician
-        ticket = supabase.table("Ticket").select("*").eq("TicketID", ticket_id).single().execute()
+        ticket = supabase.table("Ticket").select("*").eq("ticketID", ticket_id).single().execute()
         if not ticket.data:
             return {"status": "error", "message": "Ticket not found"}
         
@@ -316,5 +342,56 @@ async def resend_notification(ticket_id: int):
             if success: return {"status": "success"}
         
         return {"status": "error", "message": "Technician email not found"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    
+@app.get("/technicians/available")
+async def get_available_techs():
+    try:
+        # Re-use your existing data_service logic
+        raw_techs = get_technicians() or []
+        # Filter for availability
+        available_techs = [
+            {
+                "id": t.get('employeeID'), 
+                "name": t.get('fullName'),
+                "email": t.get('email')
+            } 
+            for t in raw_techs if t.get('isAvailable') == True
+        ]
+        return available_techs
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+    
+from pydantic import BaseModel
+
+class AssignmentUpdate(BaseModel):
+    technician_id: str
+    technician_name: str
+
+@app.patch("/tickets/{ticket_id}/assign")
+async def manually_assign_ticket(ticket_id: int, data: AssignmentUpdate):
+    try:
+        supabase = get_supabase()
+        
+        # Update the ticket status and assigned technician
+        result = (
+            supabase.table("Ticket")
+            .update({
+                "attendById": data.technician_id,
+                "attendByName": data.technician_name,
+                "status": "pending" # Change from 'unassigned' to 'pending'
+            })
+            .eq("ticketID", ticket_id)
+            .execute()
+        )
+        
+        if result.data:
+            # Optional: Trigger an email notification to the manually assigned tech
+            # send_dispatch_notification(tech_email, tech_name, [ticket_id])
+            return {"status": "success", "message": f"Ticket {ticket_id} assigned to {data.technician_name}"}
+        
+        return {"status": "error", "message": "Ticket not found"}
+        
     except Exception as e:
         return {"status": "error", "message": str(e)}

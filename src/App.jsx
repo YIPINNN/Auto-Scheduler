@@ -190,10 +190,10 @@ function App() {
             </div>
             <div className="ticket-stack" style={{ overflowY: 'auto', maxHeight: '400px', paddingRight: '5px' }}>
               {pendingList.length > 0 ? pendingList.map(ticket => (
-                <div key={ticket.TicketID} className="ticket-item critical">
+                <div key={ticket.ticketID} className="ticket-item critical">
                   <div className="ticket-body">
-                    <p><strong>{ticket.machineName || `Machine ${ticket.TicketID}`}</strong></p>
-                    <span>ID: #{ticket.TicketID} | {ticket.targetGroup}</span>
+                    <p><strong>{ticket.machineName || `Machine ${ticket.ticketID}`}</strong></p>
+                    <span>ID: #{ticket.ticketID} | {ticket.targetGroup}</span>
                   </div>
                   <div className="priority-indicator"></div>
                 </div>

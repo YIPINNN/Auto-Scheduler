@@ -48,9 +48,9 @@ def save_scenario_to_supabase(scenario_name, assignments, comp_time):
     try:
         supabase = get_supabase()
         data = {
-            "scenario_name": scenario_name,
-            "result_data": assignments,
-            "computation_time": comp_time
+            "scenarioName": scenario_name,
+            "resultData": assignments,
+            "computationTime": comp_time
         }
         return supabase.table("Optimization_Results").insert(data).execute()
     except Exception as e:
@@ -68,12 +68,12 @@ def sync_tickets_to_supabase(ticket_data_list, file_name):
             try:
                 supabase = get_supabase()
                 supabase.table("Ticket").upsert({
-                    "TicketID": int(item['id']),
+                    "ticketID": int(item['id']),
                     "alarmCode": str(item['alarm']),
                     "targetGroup": str(item['group']),
                     "machineName": f"Machine_{item['id']}",
                     "status": "pending",
-                    "LineName": file_name
+                    "lineName": file_name
                 }).execute()
                 break
             except Exception as e:
@@ -86,56 +86,82 @@ def sync_tickets_to_supabase(ticket_data_list, file_name):
 def sync_final_results_to_tickets(assignments, tech_map, file_name, ticket_details_map):
     print("\n--- 🛰️ STARTING DATABASE SYNC (Update Mode) ---")
 
+    # 1. Identify which tickets were assigned by the algorithm
+    assigned_ticket_ids = set()
     for entry in assignments:
-        tech_id = str(entry.get('tech'))
-        tech_name = tech_map.get(tech_id) or f"Tech {tech_id}"
-
         for t_id in entry.get('tickets', []):
-            for attempt in range(5):
-                try:
-                    supabase = get_supabase()
+            assigned_ticket_ids.add(str(t_id))
 
-                    t_id_str = str(t_id)
-                    t_id_int = int(re.sub(r'\D', '', t_id_str))
-                    details = ticket_details_map.get(t_id_str, {})
+    # 2. Build a full list of all tickets to process (Assigned + Unassigned)
+    full_sync_list = []
 
-                    ticket_payload = {
-                        "attendByName": tech_name,
-                        "attendById": tech_id,
-                        "status": "pending",
-                        "alarmCode": str(details.get('alarm', '0')),
-                        "targetGroup": str(details.get('group', 'TECH')),
-                        "LineName": file_name
-                    }
+    # Add Assigned
+    for entry in assignments:
+        t_tech_id = str(entry.get('tech'))
+        t_tech_name = tech_map.get(t_tech_id) or f"Tech {t_tech_id}"
+        for tid in entry.get('tickets', []):
+            full_sync_list.append({
+                "tid": tid, 
+                "tech_id": t_tech_id, 
+                "tech_name": t_tech_name, 
+                "status": "pending"
+            })
 
-                    existing = (
-                        supabase.table("Ticket")
-                        .select("TicketID")
-                        .eq("TicketID", t_id_int)
-                        .execute()
-                    )
+    # Add Unassigned (IDs present in input map but NOT in the assigned set)
+    for tid in ticket_details_map.keys():
+        if str(tid) not in assigned_ticket_ids:
+            full_sync_list.append({
+                "tid": tid, 
+                "tech_id": None, 
+                "tech_name": "Unassigned", 
+                "status": "unassigned"
+            })
 
-                    if existing.data and len(existing.data) > 0:
-                        (
-                            supabase.table("Ticket")
-                            .update(ticket_payload)
-                            .eq("TicketID", t_id_int)
-                            .execute()
-                        )
-                        print(f"✅ UPDATED: Ticket #{t_id_int} (attempt {attempt + 1})")
-                    else:
-                        ticket_payload["TicketID"] = t_id_int
-                        ticket_payload["machineName"] = f"Machine_{t_id_int}"
-                        supabase.table("Ticket").insert(ticket_payload).execute()
-                        print(f"🆕 CREATED: Ticket #{t_id_int} (attempt {attempt + 1})")
+    # 3. Process every ticket using your original logic
+    for item in full_sync_list:
+        t_id_str = str(item["tid"])
+        
+        for attempt in range(5):
+            try:
+                supabase = get_supabase()
+                t_id_int = int(re.sub(r'\D', '', t_id_str))
+                details = ticket_details_map.get(t_id_str, {})
 
-                    time.sleep(1)
-                    break
+                ticket_payload = {
+                    "attendByName": item["tech_name"],
+                    "attendById": item["tech_id"],
+                    "status": item["status"],
+                    "alarmCode": str(details.get('alarm', '0')),
+                    "targetGroup": str(details.get('group', 'TECH')),
+                    "lineName": file_name
+                }
 
-                except Exception as e:
-                    print(f"❌ ERROR Ticket {t_id} (attempt {attempt + 1}): {str(e)}")
-                    if attempt == 2:
-                        print(f"⚠️ GAVE UP on Ticket {t_id} after 3 attempts")
-                    time.sleep(2)
+                # Check if exists
+                existing = (
+                    supabase.table("Ticket")
+                    .select("ticketID")
+                    .eq("ticketID", t_id_int)
+                    .execute()
+                )
+
+                if existing.data and len(existing.data) > 0:
+                    # Update existing
+                    supabase.table("Ticket").update(ticket_payload).eq("ticketID", t_id_int).execute()
+                    print(f"✅ UPDATED: Ticket #{t_id_int} ({item['status']}) (attempt {attempt + 1})")
+                else:
+                    # Insert new
+                    ticket_payload["ticketID"] = t_id_int
+                    ticket_payload["machineName"] = f"Machine_{t_id_int}"
+                    supabase.table("Ticket").insert(ticket_payload).execute()
+                    print(f"🆕 CREATED: Ticket #{t_id_int} ({item['status']}) (attempt {attempt + 1})")
+
+                time.sleep(1)
+                break
+
+            except Exception as e:
+                print(f"❌ ERROR Ticket {t_id_str} (attempt {attempt + 1}): {str(e)}")
+                if attempt == 4:
+                    print(f"⚠️ GAVE UP on Ticket {t_id_str} after 5 attempts")
+                time.sleep(2)
 
     print("--- 🛰️ DATABASE SYNC FINISHED ---\n")

@@ -3,7 +3,7 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8')
 # 📁 paths
 OUTPUT_DIR = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output"
-CONFIG_PATH = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\MOSAHH-yipin\mo-sahh-master -finalize\Config_LatestLocal.txt"
+CONFIG_PATH = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\Config_LatestLocal.txt"
 INPUT_FILE = os.path.join(OUTPUT_DIR, "input.txt")
 RESULT_FILE = os.path.join(OUTPUT_DIR, "result.txt")
 

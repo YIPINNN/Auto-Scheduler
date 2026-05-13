@@ -173,7 +173,7 @@ const Technician = () => {
         const techTickets = [...getTechTickets(techId)].sort((a, b) => {
           if (a.status === 'attending' && b.status !== 'attending') return -1;
           if (a.status !== 'attending' && b.status === 'attending') return 1;
-          return a.TicketID - b.TicketID; 
+          return a.ticketID - b.ticketID; 
         });
         
         const utility = Math.min(techTickets.length * 20, 100); 
@@ -213,10 +213,10 @@ const Technician = () => {
               <div className="assigned-tickets">
                 <h3>Current Sequence</h3>
                 {techTickets.length > 0 ? techTickets.map((t, idx) => (
-                  <div key={t.TicketID} className={`mini-ticket ${t.status}`}>
+                  <div key={t.ticketID} className={`mini-ticket ${t.status}`}>
                     <div className="ticket-main-info">
                       <span className="sequence-number">{idx + 1}</span>
-                      <span className="t-id">#T-{t.TicketID}</span>
+                      <span className="t-id">#T-{t.ticketID}</span>
                       <strong className="m-name">{t.machineName || "N/A"}</strong>
                     </div>
                     <span className={`status-badge ${t.status}`}>

@@ -21,7 +21,7 @@ const Notification = () => {
         .select('*')
         .not('attendByName', 'is', null) 
         // SORT: Ascending (Oldest assignments at the top)
-        .order('TicketID', { ascending: true }); 
+        .order('ticketID', { ascending: true }); 
         
       if (data) setLogs(data);
     } catch (err) {
@@ -46,14 +46,14 @@ const Notification = () => {
   };
 
   const handleVerifyEmail = (log) => {
-    const subject = encodeURIComponent(`[MO-SAHH] New Assignment: Ticket #${log.TicketID}`);
+    const subject = encodeURIComponent(`[MO-SAHH] New Assignment: Ticket #${log.ticketID}`);
     const body = encodeURIComponent(`Hello ${log.attendByName},\n\nYou have been assigned to ${log.machineName}.\nAlarm Code: ${log.alarmCode}\nPlease report to the site immediately.`);
     window.location.href = `mailto:tech_service@yourcompany.com?subject=${subject}&body=${body}`;
   };
 
   // Filter Logic: Search by Ticket ID or Technician Name
   const filteredLogs = logs.filter(log => {
-    const id = log.TicketID?.toString() || "";
+    const id = log.ticketID?.toString() || "";
     const name = log.attendByName?.toLowerCase() || "";
     return id.includes(searchTerm) || name.includes(searchTerm.toLowerCase());
   });
@@ -103,7 +103,7 @@ const Notification = () => {
           <tbody>
             {filteredLogs.length > 0 ? filteredLogs.map((log) => (
               <tr key={log.TicketID} className="log-row">
-                <td className="id-cell">#{log.TicketID}</td>
+                <td className="id-cell">#{log.ticketID}</td>
                 <td>
                   <div className="log-user">
                     <strong>{log.attendByName}</strong>
@@ -125,11 +125,11 @@ const Notification = () => {
                 <td>
                   <button 
                     className="resend-btn-action"
-                    disabled={resendingId === log.TicketID}
-                    onClick={() => handleResend(log.TicketID)}
+                    disabled={resendingId === log.ticketID}
+                    onClick={() => handleResend(log.ticketID)}
                   >
-                    <Send size={14} className={resendingId === log.TicketID ? "fly-away" : ""} />
-                    {resendingId === log.TicketID ? "Sending..." : "Manual Resend"}
+                    <Send size={14} className={resendingId === log.ticketID ? "fly-away" : ""} />
+                    {resendingId === log.ticketID ? "Sending..." : "Manual Resend"}
                   </button>
                 </td>
               </tr>

@@ -1,25 +1,17 @@
 ===== FINAL ASSIGNMENT =====
-Technician 1000286793:
-  2008
-Technician 1000297986:
-  2012
-Technician 1000302035:
-  2013
-Technician 1000305966:
+Technician 1000294979:
   2016
-Technician 1000306096:
   2009
-Technician 1000308623:
+Technician 1000299235:
+  2013
   2018
-Technician 1000404653:
-  2014
-Technician 26604:
+  2012
+Technician 1000306972:
+  2008
+Technician 1000405856:
   2011
-Technician 39306:
-  2017
-  2010
-  2015
+  2014
 
 Final Objectives:
-Variance: 1.2828
-Penalty: 6.0000
+Variance: 0.6667
+Penalty: 3.0000
