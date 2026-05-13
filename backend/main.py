@@ -234,14 +234,14 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 
         # 6. EXECUTE MATLAB
         update_config_file()
-        run_matlab()
+        latest_result_file = run_matlab()
 
         algo_duration = time.time() - algo_start
-        # --- END CORE TIMER ---
         print(f"⚡ MO-SAHH Core Computation Time: {algo_duration:.4f}s")
-        
+        print(f"📄 Reading latest MATLAB result from: {latest_result_file}")
+
         # 7. PROCESS RESULTS
-        full_data = read_result() 
+        full_data = read_result(latest_result_file)
         assignments = full_data.get("assignments", [])
 
         # ... (Step 7: Process Results) ...

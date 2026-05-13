@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar/Sidebar';
 import Schedule from './components/Schedule/Schedule';
 import Ticket from './components/Ticket/Ticket';
+import CreateTicket from './components/CreateTicket/CreateTicket'; // 1. Added Import
 import Technician from './components/Technician/Technician';
 import Notification from './components/Notification/Notification';
 import Performance from './components/Performance/Performance';
-import Login from './components/Login/Login'; // Integrated Login
-import Account from './components/Account/Account'; // Integrated Account
+import Login from './components/Login/Login'; 
+import Account from './components/Account/Account'; 
 import supabase from './config/supabaseClient';
 import './App.css';
 
 function App() {
-  // 1. Initialize state from localStorage so it persists on refresh
+  // 1. Initialize state from localStorage
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('mosahh_session');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -28,7 +29,6 @@ function App() {
     setCurrentPage('Dashboard');
   };
 
-  // 3. Updated Logout Handler to clear localStorage
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('mosahh_session');
@@ -37,7 +37,7 @@ function App() {
   
   // --- DATA FETCHING ---
   const fetchData = async () => {
-    if (!user) return; // Guard: Only fetch if authenticated
+    if (!user) return; 
     try {
       const { data: techData } = await supabase.from('Technician').select('*');
       const { data: ticketData } = await supabase.from('Ticket')
@@ -57,17 +57,14 @@ function App() {
     }
   };
 
-  // 2. Single useEffect to handle Data Fetching and Auth Persistence
   useEffect(() => {
-    // Only fetch data if we have a user
     if (user) {
       fetchData();
       const interval = setInterval(fetchData, 10000);
       return () => clearInterval(interval);
     }
-  }, [user]); // This triggers immediately when user state is set
+  }, [user]); 
 
-  // 3. Separate useEffect for the Supabase Auth Listener (The Persistence Layer)
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
@@ -88,7 +85,6 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // --- LOGIN GUARD ---
   if (!user) {
     return <Login onLogin={handleLogin} />;
   }
@@ -185,8 +181,8 @@ function App() {
 
           <section className="glass-card attendance-panel" style={{ height: '500px' }}>
             <div className="panel-header">
-               <h3>Live Queue</h3>
-               <span className="count-tag">{pendingList.length}</span>
+                <h3>Live Queue</h3>
+                <span className="count-tag">{pendingList.length}</span>
             </div>
             <div className="ticket-stack" style={{ overflowY: 'auto', maxHeight: '400px', paddingRight: '5px' }}>
               {pendingList.length > 0 ? pendingList.map(ticket => (
@@ -214,6 +210,8 @@ function App() {
         {currentPage === 'Dashboard' && <DashboardView />}
         {currentPage === 'Schedule' && <Schedule technicians={technicians} />}
         {currentPage === 'Tickets' && <Ticket />}
+        {/* 2. Added the Create Ticket route here */}
+        {currentPage === 'Create Ticket' && <CreateTicket />} 
         {currentPage === 'Technicians' && <Technician />}
         {currentPage === 'Notification' && <Notification />}
         {currentPage === 'Performance' && <Performance />}

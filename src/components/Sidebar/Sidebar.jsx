@@ -4,9 +4,10 @@ import {
   CalendarRange, 
   Users, 
   Ticket as TicketIcon, 
+  PlusSquare, // Added for Create Ticket
   BarChart3, 
   Send,
-  UserCircle // Added for the Account icon
+  UserCircle 
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -16,9 +17,10 @@ const Sidebar = ({ onNavigate, activePage }) => {
     { name: 'Schedule', icon: <CalendarRange size={20} /> },
     { name: 'Technicians', icon: <Users size={20} /> },
     { name: 'Tickets', icon: <TicketIcon size={20} /> },
+    { name: 'Create Ticket', icon: <PlusSquare size={20} /> }, // New Navigation Item
     { name: 'Notification', icon: <Send size={20} /> },
     { name: 'Performance', icon: <BarChart3 size={20} /> },
-    { name: 'Account', icon: <UserCircle size={20} /> }, // Added without changing structure
+    { name: 'Account', icon: <UserCircle size={20} /> }, 
   ];
 
   return (

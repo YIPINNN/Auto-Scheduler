@@ -306,14 +306,14 @@ const Schedule = ({ technicians = [] }) => {
         <div className="history-grid">
           {scenarios.map((s) => (
             <button 
-              key={s.id} 
-              className={`history-item ${scenarioName === s.scenario_name ? "active-history" : ""}`} 
+              key={s.resultID}
+              className={`history-item ${scenarioName === s.scenarioName ? "active-history" : ""}`}
               onClick={() => { 
-                setResults(s.result_data); 
-                setScenarioName(s.scenario_name); 
+                setResults(s.resultData); 
+                setScenarioName(s.scenarioName); 
               }}
             >
-              <strong>{s.scenario_name}</strong>
+              <strong>{s.scenarioName}</strong>
               <small>{new Date(s.created_at).toLocaleString()}</small>
             </button>
           ))}

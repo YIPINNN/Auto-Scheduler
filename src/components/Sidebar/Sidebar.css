@@ -77,7 +77,6 @@
   font-size: 0.95rem;
 }
 
-/* The neon glow strip for active items */
 .active-glow {
   position: absolute;
   left: 0;

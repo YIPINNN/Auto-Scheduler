@@ -1,5 +1,6 @@
 employeeID,fullName,email,targetGroup,jobTitle,endDate,startDate,status,technicianStatusID,jobTitleID,workload,isAvailable
 1000299235,Muhammad Haikal Samsudin,tanyipin42@gmail.com,EE,"Technician 3, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,2395ad68-b937-4959-863a-571fe16ff958,5010,0,True
 1000294979,muhammad zahidi,tanyipin42@gmail.com,EE,"Technician 2, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,2e8dd13d-fe92-4d4a-aeb8-55e1126b430b,5009,0,True
+1000286793,SAMUS A/L AIPON,tanyipin42@gmail.com,EE,"Technician 3, Engineering",,2026-04-29T23:52:07.08624+00:00,Active,76092ae7-fd5c-4e17-931b-ca4a830420ac,5010,0,True
 1000405856,Muhammad Abhimanshah Bin Shaharin,tanyipin42@gmail.com,MFG,"Operator 1, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,70890373-4a6b-4aaa-ade5-71a5c2ad5756,5004,0,True
 1000306972,LIAN ZHANG YAN,tanyipin42@gmail.com,NPI,"Engineer, Packaging Engineering",,2026-04-29T23:52:07.08624+00:00,Active,5bc92a15-9f26-4a50-a7ed-1983f4c0ec70,5001,0,True

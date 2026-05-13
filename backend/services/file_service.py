@@ -40,50 +40,59 @@ def update_config_file():
 
 
 # ✅ Read MATLAB result
-def read_result():
-    # Use the full path you defined at the top of your file_service.py
-    # to ensure it finds the file correctly
+def read_result(result_file_path):
     try:
-        with open("output/result.txt", "r", encoding="utf-8") as f:
+        with open(result_file_path, "r", encoding="utf-8") as f:
             lines = f.readlines()
     except FileNotFoundError:
-        print("Error: output/result.txt not found.")
+        print(f"Error: {result_file_path} not found.")
         return {"assignments": [], "variance": 0, "penalty": 0}
 
     assignments = []
     current_tech = None
-    variance = None
-    penalty = None
+    variance = 0
+    penalty = 0
 
-    for line in lines:
-        line = line.strip()
+    in_final_assignment = False
+    in_final_objectives = False
+
+    for raw_line in lines:
+        line = raw_line.strip()
         if not line:
             continue
 
-        # Detect Technician Line
-        if line.startswith("Technician"):
-            # Splits "Technician 1000403990:" into ["Technician", "1000403990:"]
-            tech_id = line.split(" ")[1].replace(":", "")
-            current_tech = {"tech": tech_id, "tickets": []}
-            assignments.append(current_tech)
+        if "===== FINAL ASSIGNMENT =====" in line:
+            in_final_assignment = True
+            in_final_objectives = False
+            current_tech = None
+            continue
 
-        # Detect Ticket Line (e.g., "T-22867225" or just "22867225")
-        # Added a check for line.isdigit() in case your MATLAB output skips the "T"
-        elif (line.startswith("T") or line.isdigit()) and current_tech:
-            current_tech["tickets"].append(line)
+        if "Final Objectives:" in line:
+            in_final_assignment = False
+            in_final_objectives = True
+            current_tech = None
+            continue
 
-        # Performance Metrics
-        elif "Variance" in line:
-            try:
-                variance = float(line.split(":")[1].strip())
-            except: variance = 0
-            
-        elif "Penalty" in line:
-            try:
-                penalty = float(line.split(":")[1].strip())
-            except: penalty = 0
+        if in_final_assignment:
+            if line.startswith("Technician"):
+                tech_id = line.split(" ")[1].replace(":", "")
+                current_tech = {"tech": tech_id, "tickets": []}
+                assignments.append(current_tech)
+            elif line.isdigit() and current_tech:
+                current_tech["tickets"].append(line)
 
-    # This structure is critical for your current React Schedule.jsx
+        elif in_final_objectives:
+            if line.startswith("Variance:"):
+                try:
+                    variance = float(line.split(":", 1)[1].strip())
+                except:
+                    variance = 0
+            elif line.startswith("Penalty:"):
+                try:
+                    penalty = float(line.split(":", 1)[1].strip())
+                except:
+                    penalty = 0
+
     return {
         "assignments": assignments,
         "variance": variance,
