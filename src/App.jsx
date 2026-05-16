@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar/Sidebar';
 import Schedule from './components/Schedule/Schedule';
 import Ticket from './components/Ticket/Ticket';
-import CreateTicket from './components/CreateTicket/CreateTicket'; // 1. Added Import
+import CreateTicket from './components/CreateTicket/CreateTicket';
 import Technician from './components/Technician/Technician';
+import TaskToDo from './components/TaskToDo/TaskToDo';
 import Notification from './components/Notification/Notification';
 import Performance from './components/Performance/Performance';
 import Login from './components/Login/Login'; 
@@ -12,9 +13,9 @@ import supabase from './config/supabaseClient';
 import './App.css';
 
 function App() {
-  // 1. Initialize state from localStorage
+  // Initialize user session from local client cache storage to support persistent login states
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('mosahh_session');
+    const savedUser = localStorage.getItem('mosahh_active_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [currentPage, setCurrentPage] = useState('Dashboard');
@@ -22,27 +23,67 @@ function App() {
   const [allTickets, setAllTickets] = useState([]); 
   const [optimizationScore, setOptimizationScore] = useState(0);
 
-  // --- AUTHENTICATION HANDLERS ---
-  const handleLogin = (userData) => {
-    setUser(userData);
-    localStorage.setItem('mosahh_session', JSON.stringify(userData));
-    setCurrentPage('Dashboard');
+  // --- CUSTOM EMPLOYEE ID AUTHENTICATION DISPATCHER ---
+  const handleLoginByEmployeeID = async (employeeID, password) => {
+    try {
+      // Query Remote Table directly for ANY employee ID (Admin, Manager, or Employee)
+      const { data, error } = await supabase
+        .from('Technician')
+        .select('*')
+        .eq('employeeID', employeeID)
+        .single();
+
+      if (error || !data) {
+        throw new Error("Invalid Credentials. Employee ID cannot be verified inside system registry.");
+      }
+
+      // Evaluate User Privilege Role mapping constraints via JobTitleID dynamically
+      let assignedRole = 'Employee';
+      
+      if (data.jobTitleID === 5013 || data.jobTitle?.toLowerCase() === 'admin') {
+        assignedRole = 'Administrator';
+      } else if (data.jobTitleID === 5002 || data.jobTitle?.toLowerCase() === 'manager') {
+        assignedRole = 'Manager';
+      }
+
+      const verifiedUser = {
+        id: data.technicianStatusID,
+        employeeID: data.employeeID,
+        email: data.email,
+        name: data.fullName,
+        role: assignedRole
+      };
+
+      setUser(verifiedUser);
+      localStorage.setItem('mosahh_active_user', JSON.stringify(verifiedUser));
+      setCurrentPage('Dashboard');
+      return { success: true };
+
+    } catch (err) {
+      console.error("Authentication Exception:", err.message);
+      alert(err.message);
+      return { success: false, error: err.message };
+    }
   };
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('mosahh_session');
+    localStorage.removeItem('mosahh_active_user');
     setCurrentPage('Dashboard');
   };
   
-  // --- DATA FETCHING ---
+  // --- REAL-TIME TELEMETRY POLLING REFRESH ---
   const fetchData = async () => {
     if (!user) return; 
     try {
       const { data: techData } = await supabase.from('Technician').select('*');
-      const { data: ticketData } = await supabase.from('Ticket')
-        .select('*')
-        .in('status', ['pending', 'attending']);
+      
+      // Limit data surface layer for base fields based on role privileges
+      let query = supabase.from('Ticket').select('*');
+      if (user.role === 'Employee') {
+        query = query.in('status', ['pending', 'attending']);
+      }
+      const { data: ticketData } = await query;
 
       if (techData) setTechnicians(techData);
       if (ticketData) {
@@ -53,7 +94,7 @@ function App() {
         setOptimizationScore(score);
       }
     } catch (error) {
-      console.error("Sync Error:", error);
+      console.error("Telemetry Sync Interrupted Error:", error);
     }
   };
 
@@ -65,28 +106,9 @@ function App() {
     }
   }, [user]); 
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        const userData = {
-          id: session.user.id,
-          email: session.user.email,
-          name: "System Administrator",
-          role: "Manager"
-        };
-        setUser(userData);
-        localStorage.setItem('mosahh_session', JSON.stringify(userData));
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        localStorage.removeItem('mosahh_session');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
+  // --- FORCE ENTRY ACCESSIBILITY GUARD BLOCK ---
   if (!user) {
-    return <Login onLogin={handleLogin} />;
+    return <Login onLoginWithID={handleLoginByEmployeeID} />;
   }
 
   const getTechLoad = (techId) => {
@@ -102,12 +124,14 @@ function App() {
       <main className="dashboard-content">
         <header className="glass-header">
           <div className="header-text">
-            <span className="system-badge">MO-SAHH Engine: Operational</span>
-            <h1>Task Allocation Dashboard</h1>
+            <span className="system-badge">{user.role} Privilege Matrix Node</span>
+            <h1>{user.role === 'Employee' ? 'Field Operational Analytics' : 'Task Allocation Dashboard'}</h1>
           </div>
-          <button className="neon-btn reschedule" onClick={() => setCurrentPage('Schedule')}>
-            OPEN OPTIMIZER
-          </button>
+          {user.role !== 'Employee' && (
+            <button className="neon-btn reschedule" onClick={() => setCurrentPage('Schedule')}>
+              OPEN OPTIMIZER
+            </button>
+          )}
         </header>
 
         <section className="stats-row">
@@ -125,18 +149,20 @@ function App() {
               <p className="stat-label">System Flow</p>
             </div>
           </div>
-          <div className="stat-glass-card" style={{ '--accent': '#3b82f6' }}>
-            <span className="stat-icon">👥</span>
-            <div>
-              <p className="stat-val">{availableTechs.length}</p>
-              <p className="stat-label">Available Resources (of {technicians.length})</p>
+          {user.role !== 'Employee' && (
+            <div className="stat-glass-card" style={{ '--accent': '#3b82f6' }}>
+              <span className="stat-icon">👥</span>
+              <div>
+                <p className="stat-val">{availableTechs.length}</p>
+                <p className="stat-label">Available Resources (of {technicians.length})</p>
+              </div>
             </div>
-          </div>
+          )}
         </section>
 
         <div className="grid-container">
           <section className="glass-card main-viz" style={{ display: 'flex', flexDirection: 'column', height: '500px' }}>
-            <h3>Live Resource Load (Sorted by Utility)</h3>
+            <h3>Live Resource Load Core Matrix</h3>
             <div className="visual-timeline" style={{ flex: 1, overflowY: 'auto', paddingRight: '10px', marginTop: '15px' }}>
               {[...technicians]
                 .sort((a, b) => getTechLoad(b.employeeID) - getTechLoad(a.employeeID))
@@ -147,17 +173,14 @@ function App() {
                   return (
                     <div key={tech.employeeID} className={`timeline-row ${isOffDuty ? 'off-duty-row' : ''}`}>
                       <div className="tech-profile">
-                        <div className="avatar-mini" style={{ 
-                          width: '40px', height: '40px', minWidth: '40px', flexShrink: 0,
-                          opacity: isOffDuty ? 0.4 : 1 
-                        }}>
+                        <div className="avatar-mini" style={{ width: '40px', height: '40px', minWidth: '40px', flexShrink: 0, opacity: isOffDuty ? 0.4 : 1 }}>
                           {tech.fullName ? tech.fullName[0] : 'T'}
                         </div>
                         <div className="tech-meta">
                           <p className="tech-name" style={{ color: isOffDuty ? '#64748b' : '#f8fafc' }}>
                             {tech.fullName} {isOffDuty && "(Off-Duty)"}
                           </p>
-                          <small>ID: {tech.employeeID}</small>
+                          <small>ID: {tech.employeeID} | Module Group: {tech.targetGroup || "General"}</small>
                         </div>
                       </div>
                       <div className="track">
@@ -181,7 +204,7 @@ function App() {
 
           <section className="glass-card attendance-panel" style={{ height: '500px' }}>
             <div className="panel-header">
-                <h3>Live Queue</h3>
+                <h3>Live Incident Stack</h3>
                 <span className="count-tag">{pendingList.length}</span>
             </div>
             <div className="ticket-stack" style={{ overflowY: 'auto', maxHeight: '400px', paddingRight: '5px' }}>
@@ -205,16 +228,17 @@ function App() {
 
   return (
     <div className="dashboard-layout">
-      <Sidebar onNavigate={setCurrentPage} activePage={currentPage} />
+      {/* Dynamic menu array controller parameter hooks */}
+      <Sidebar onNavigate={setCurrentPage} activePage={currentPage} userRole={user.role} />
       <div className="main-content-wrapper">
         {currentPage === 'Dashboard' && <DashboardView />}
-        {currentPage === 'Schedule' && <Schedule technicians={technicians} />}
-        {currentPage === 'Tickets' && <Ticket />}
-        {/* 2. Added the Create Ticket route here */}
-        {currentPage === 'Create Ticket' && <CreateTicket />} 
-        {currentPage === 'Technicians' && <Technician />}
-        {currentPage === 'Notification' && <Notification />}
-        {currentPage === 'Performance' && <Performance />}
+        {currentPage === 'Schedule' && user.role !== 'Employee' && <Schedule technicians={technicians} />}
+        {currentPage === 'Tickets' && <Ticket user={user} />}
+        {currentPage === 'Create Ticket' && <CreateTicket user={user} />}
+        {currentPage === 'Task To Do' && user.role !== 'Administrator' && (<TaskToDo user={user} />)}
+        {currentPage === 'Technicians' && user.role !== 'Employee' && <Technician />}
+        {currentPage === 'Notification' && user.role !== 'Employee' && <Notification />}
+        {currentPage === 'Performance' && user.role !== 'Employee' && <Performance />}
         {currentPage === 'Account' && <Account user={user} onLogout={handleLogout} />}
       </div>
     </div>

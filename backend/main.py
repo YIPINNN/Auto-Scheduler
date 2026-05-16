@@ -178,36 +178,55 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         print(f"Available for Assignment: {len(all_techs)}")
         
         print(f"--- DATABASE CHECK ---")
-        attending_list = [t for t in all_db_tickets if str(t.get('status')).lower() == 'attending']
-        db_pending_tickets = [t for t in all_db_tickets if str(t.get('status')).lower() == 'pending']
-        
+
+        attending_list = [
+            t for t in all_db_tickets
+            if str(t.get('status')).lower() == 'attending'
+        ]
+
+        db_schedulable_tickets = [
+            t for t in all_db_tickets
+            if str(t.get('status')).lower() in ['pending', 'unassigned']
+        ]
+
         print(f"Attending (Locked): {len(attending_list)}")
-        print(f"Pending (3-7): {len(db_pending_tickets)}")
+        print(f"Pending + Unassigned for Scheduling: {len(db_schedulable_tickets)}")
 
         # 3. CONSTRUCT COMBINED QUEUE & TECHNICAL MAP
         final_input_rows = []
-        ticket_details_map = {} # This will store the technical info for syncing later
-        
-        # Process 3-7 from DB
-        for t in db_pending_tickets:
+        ticket_details_map = {}
+        added_ticket_ids = set()
+
+        # Process existing pending + unassigned tickets from DB
+        for t in db_schedulable_tickets:
             tid = str(t.get('ticketID'))
             acode = str(t.get('alarmCode') or "0")
             tgrp = str(t.get('targetGroup') or "TECH")
+
+            if tid not in added_ticket_ids:
+                final_input_rows.append(f"{tid} {acode} {tgrp}")
+                ticket_details_map[tid] = {
+                    'alarm': acode,
+                    'group': tgrp
+                }
+                added_ticket_ids.add(tid)
             
-            final_input_rows.append(f"{tid} {acode} {tgrp}")
-            # Store details for step 8
-            ticket_details_map[tid] = {'alarm': acode, 'group': tgrp}
-            
-        # Process 8-16 from File
+        # Process new tickets from uploaded file
         file_lines = content_str.split('\n')
-        start_idx = 1 if file_lines[0].strip().isdigit() else 0
+        start_idx = 1 if file_lines and file_lines[0].strip().isdigit() else 0
+
         for line in file_lines[start_idx:]:
             parts = line.split()
             if len(parts) >= 3:
                 tid, acode, tgrp = parts[0], parts[1], parts[2]
-                final_input_rows.append(f"{tid} {acode} {tgrp}")
-                # Store details for step 8
-                ticket_details_map[tid] = {'alarm': acode, 'group': tgrp}
+
+                if tid not in added_ticket_ids:
+                    final_input_rows.append(f"{tid} {acode} {tgrp}")
+                    ticket_details_map[tid] = {
+                        'alarm': acode,
+                        'group': tgrp
+                    }
+                    added_ticket_ids.add(tid)
 
         # 4. WRITE INPUT.TXT
         total_count = len(final_input_rows)
@@ -234,20 +253,15 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 
         # 6. EXECUTE MATLAB
         update_config_file()
-        latest_result_file = run_matlab()
+        run_matlab()
 
         algo_duration = time.time() - algo_start
         print(f"⚡ MO-SAHH Core Computation Time: {algo_duration:.4f}s")
-        print(f"📄 Reading latest MATLAB result from: {latest_result_file}")
 
         # 7. PROCESS RESULTS
-        full_data = read_result(latest_result_file)
+        full_data = read_result()
         assignments = full_data.get("assignments", [])
-
-        # ... (Step 7: Process Results) ...
-        full_data = read_result() 
-        assignments = full_data.get("assignments", [])
-
+        
         # --- NEW: Identify Unassigned Tickets ---
         assigned_ticket_ids = set()
         for entry in assignments:

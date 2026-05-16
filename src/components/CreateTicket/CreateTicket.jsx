@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  PlusCircle, HardDrive, Settings, Layers, ClipboardList, Users, MapPin 
+  PlusCircle, HardDrive, Settings, Layers, ClipboardList, Users, MapPin, Clock, Info
 } from 'lucide-react';
 import supabase from '../../config/supabaseClient';
 import './CreateTicket.css';
 
-const CreateTicket = () => {
+const CreateTicket = ({ user }) => {
   const [currentUser, setCurrentUser] = useState({ id: '', name: 'Loading...' });
 
   const initialState = {
@@ -13,7 +13,7 @@ const CreateTicket = () => {
     machineID: '',
     lineName: '', 
     lotId: '',
-    currentRecipe: '', // Manual text input
+    currentRecipe: '', 
     alarmCode: '', 
     targetGroup: '',
     ticketType: 'i-Downtime', 
@@ -22,6 +22,7 @@ const CreateTicket = () => {
     ticketRemark: '',
     rootCause: '',
     correctiveAction: '',
+    estimatedDuration: '', // Minutes input tracker
   };
 
   const [formData, setFormData] = useState(initialState);
@@ -32,7 +33,7 @@ const CreateTicket = () => {
   useEffect(() => {
     const fetchMasterData = async () => {
       try {
-        // Fetch Current Authenticated User
+        // Fetch Current Authenticated User Data
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
           setCurrentUser({
@@ -77,19 +78,25 @@ const CreateTicket = () => {
     setIsSubmitting(true);
 
     try {
+      // 1. Math Calculation Interception: Parse minutes entered and inject the 5-minute transition overhead
+      const rawMinutes = parseInt(formData.estimatedDuration, 10) || 0;
+      const calculatedDurationWithBuffer = rawMinutes + 5;
+
       const { error } = await supabase
         .from('Ticket')
         .insert([{
           ...formData,
+          estimatedDuration: calculatedDurationWithBuffer, // Commits the adjusted duration to BigInt column
           status: 'unassigned', 
-          createdById: currentUser.id,
-          createdByName: currentUser.name,
+          createdById: user?.employeeID || 'SYSTEM',
+          createdByName: user?.name || 'Unknown Operator',
           triggerType: 'Manual',
+          ticketStart: new Date().toISOString()
         }]);
 
       if (error) throw error;
       
-      alert("Ticket successfully initialized.");
+      alert(`Ticket initialized successfully. Database committed execution slot: ${calculatedDurationWithBuffer} mins (includes 5m overhead).`);
       
       setFormData({ 
         ...initialState, 
@@ -108,7 +115,7 @@ const CreateTicket = () => {
       <header className="glass-header">
         <div className="header-text">
           <h1>Ticket Creation</h1>
-          <p>Logged as <strong>{currentUser.name}</strong></p>
+          <p>Logged as <strong>{user?.name || "System Specialist"}</strong></p>
         </div>
       </header>
 
@@ -144,9 +151,16 @@ const CreateTicket = () => {
                 </div>
               </div>
 
-              <div className="input-group">
-                <label className="single-line-label">Machine Name</label>
-                <input required value={formData.machineName} onChange={e => setFormData({...formData, machineName: e.target.value})} />
+              {/* Combined Row for Clean Grid Alignment: Machine Name & Machine ID */}
+              <div className="input-row-2">
+                <div className="input-group">
+                  <label className="single-line-label">Machine Name</label>
+                  <input required placeholder="e.g. Sorter Alpha" value={formData.machineName} onChange={e => setFormData({...formData, machineName: e.target.value})} />
+                </div>
+                <div className="input-group">
+                  <label className="single-line-label">Machine ID Reference</label>
+                  <input required placeholder="e.g. MC-7002" value={formData.machineID} onChange={e => setFormData({...formData, machineID: e.target.value})} />
+                </div>
               </div>
 
               <div className="input-group">
@@ -177,16 +191,16 @@ const CreateTicket = () => {
               </div>
             </div>
 
-            {/* --- Column 2: Diagnostics --- */}
+            {/* --- Column 2: Diagnostics & Timing --- */}
             <div className="form-column">
-              <h3 className="section-title"><Settings size={18} /> Diagnostics</h3>
+              <h3 className="section-title"><Settings size={18} /> Diagnostics & Telemetry</h3>
               <div className="input-group">
                 <label className="single-line-label">Root Cause</label>
-                <input value={formData.rootCause} onChange={e => setFormData({...formData, rootCause: e.target.value})} />
+                <input placeholder="Optional investigation fields..." value={formData.rootCause} onChange={e => setFormData({...formData, rootCause: e.target.value})} />
               </div>
               <div className="input-group">
                 <label className="single-line-label">Corrective Action</label>
-                <input value={formData.correctiveAction} onChange={e => setFormData({...formData, correctiveAction: e.target.value})} />
+                <input placeholder="Optional containment actions..." value={formData.correctiveAction} onChange={e => setFormData({...formData, correctiveAction: e.target.value})} />
               </div>
 
               <div className="input-row-2">
@@ -205,10 +219,34 @@ const CreateTicket = () => {
                 </div>
               </div>
               
-              <div className="input-group">
-                <label className="single-line-label"><Layers size={14} /> Lot ID</label>
-                <input value={formData.lotId} onChange={e => setFormData({...formData, lotId: e.target.value})} />
+              {/* Added Real-Time Maintenance Duration Inputs Configuration Controls */}
+              <div className="input-row-2">
+                <div className="input-group">
+                  <label className="single-line-label"><Layers size={14} /> Lot ID</label>
+                  <input placeholder="Batch lot number..." value={formData.lotId} onChange={e => setFormData({...formData, lotId: e.target.value})} />
+                </div>
+                <div className="input-group">
+                  <label className="single-line-label"><Clock size={14} /> Estimated Time Need (Minutes)</label>
+                  <input 
+                    required
+                    type="number" 
+                    min="1"
+                    placeholder="Duration value in mins..."
+                    value={formData.estimatedDuration} 
+                    onChange={e => setFormData({...formData, estimatedDuration: e.target.value})} 
+                  />
+                </div>
               </div>
+
+              {/* High-Tech Engine Information Micro-banner Component UI notice */}
+              <div className="timing-buffer-notice-banner" style={{ display: 'flex', gap: '10px', background: 'rgba(78, 204, 163, 0.05)', border: '1px solid rgba(78, 204, 163, 0.15)', padding: '12px 16px', borderRadius: '8px', marginTop: '-5px', fontSize: '0.82rem', color: '#94a3b8', lineHeight: '1.4', textAlign: 'left' }}>
+                <Info size={28} style={{ color: '#4ecca3', flexShrink: 0 }} />
+                <span>
+                  <strong style={{ color: '#4ecca3', display: 'block', marginBottom: '2px' }}>MO-SAHH Engine Matrix Policy Applied:</strong>
+                  The system automatically locks an additional <strong>+5 minutes</strong> overhead buffer for route transition constraints to optimize technician shift handovers.
+                </span>
+              </div>
+
             </div>
           </div>
 
@@ -222,13 +260,13 @@ const CreateTicket = () => {
               rows="3" 
               value={formData.downtimeDescription} 
               onChange={e => setFormData({...formData, downtimeDescription: e.target.value})} 
-              placeholder="Full breakdown description..." 
+              placeholder="Full breakdown description notes..." 
             />
           </div>
 
           <div className="form-actions">
             <button type="submit" className="neon-dispatch-btn" disabled={isSubmitting}>
-              {isSubmitting ? "Processing..." : <><PlusCircle size={20} /> Create Downtime Ticket </>}
+              {isSubmitting ? "Syncing Telemetry Grid..." : <><PlusCircle size={20} /> Create Downtime Ticket </>}
             </button>
           </div>
         </form>

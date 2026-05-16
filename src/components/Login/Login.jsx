@@ -1,44 +1,34 @@
 import React, { useState } from 'react';
 import { Lock, User, ShieldCheck, Loader2 } from 'lucide-react';
-import supabase from '../../config/supabaseClient'; // Ensure this path is correct
 import './Login.css';
 
-const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState("");
+const Login = ({ onLoginWithID, isSystemLoading }) => {
+  const [employeeID, setEmployeeID] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [localLoading, setLocalLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLocalLoading(true);
     setErrorMsg("");
 
     try {
-      // REAL AUTH CALL to Supabase
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-
-      if (error) throw error;
-
-      if (data.user) {
-        // Construct a session object to pass to App.jsx
-        onLogin({
-          id: data.user.id,
-          email: data.user.email,
-          name: "System Administrator", // You can pull this from a Profile table later
-          role: "Management",
-          lastLogin: data.user.last_sign_in_at
-        });
+      // Execute custom table-lookup auth routing defined inside App.jsx
+      const response = await onLoginWithID(employeeID, password);
+      
+      if (response && !response.success) {
+        setErrorMsg(response.error || "Authentication rejected. Verify credential values.");
       }
     } catch (err) {
-      setErrorMsg(err.message || "Invalid login credentials.");
+      setErrorMsg("An unexpected operational error occurred during lookup.");
     } finally {
-      setLoading(false);
+      setLocalLoading(false);
     }
   };
+
+  // Combine parent sync hooks and local state locks to handle form button disables safely
+  const isLoading = isSystemLoading || localLoading;
 
   return (
     <div className="login-container">
@@ -46,7 +36,7 @@ const Login = ({ onLogin }) => {
         <div className="login-header">
           <ShieldCheck size={48} color="#4ecca3" />
           <h2>Auto-Scheduler</h2>
-          <p>Secure Engine Access</p>
+          <p>Secure Engine Access Registry</p>
         </div>
 
         {errorMsg && <div className="auth-error-badge">{errorMsg}</div>}
@@ -55,30 +45,32 @@ const Login = ({ onLogin }) => {
           <div className="login-input">
             <User size={18} />
             <input 
-              type="email" 
-              placeholder="Admin Email" 
+              type="text" 
+              placeholder="Employee ID (e.g. admin, tech1)" 
               required 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+              value={employeeID} 
+              onChange={(e) => setEmployeeID(e.target.value)} 
+              disabled={isLoading}
             />
           </div>
           <div className="login-input">
             <Lock size={18} />
             <input 
               type="password" 
-              placeholder="Master Password" 
+              placeholder="System Password" 
               required 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
+              disabled={isLoading}
             />
           </div>
-          <button type="submit" className="neon-btn login-btn" disabled={loading}>
-            {loading ? <Loader2 className="spin" size={18} /> : "INITIALIZE SESSION"}
+          <button type="submit" className="neon-btn login-btn" disabled={isLoading}>
+            {isLoading ? <Loader2 className="spin" size={18} /> : "INITIALIZE SESSION"}
           </button>
         </form>
         
         <div className="login-footer">
-          <span>Protected by AES-256 Encryption</span>
+          <span>Protected by AES-256 Encryption Node Matrix</span>
         </div>
       </div>
     </div>

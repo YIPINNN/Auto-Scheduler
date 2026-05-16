@@ -3,7 +3,8 @@ import { Search, X, Info, HardDrive, UserPlus, RefreshCw, PencilLine, Check } fr
 import supabase from '../../config/supabaseClient';
 import './Ticket.css';
 
-const Ticket = () => {
+// 1. Accept user object context as a prop from App.jsx
+const Ticket = ({ user }) => {
   const [tickets, setTickets] = useState([]);
   const [technicians, setTechnicians] = useState([]); 
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,6 +12,9 @@ const Ticket = () => {
   const [isEditing, setIsEditing] = useState(false); 
   const [editForm, setEditForm] = useState({}); 
   const [loading, setLoading] = useState(true);
+
+  // Helper boolean to check if user has structural authorization (Manager/Admin)
+  const isAuthorized = user?.role === 'Manager' || user?.role === 'Administrator';
 
   const fetchInitialData = async () => {
     setLoading(true);
@@ -42,12 +46,20 @@ const Ticket = () => {
   }, []);
 
   const openModal = (ticket, editMode = false) => {
+    // If a normal technician somehow forces an edit invocation, block it immediately
+    if (editMode && !isAuthorized) return;
+
     setSelectedTicket(ticket);
     setIsEditing(editMode);
     setEditForm({ ...ticket }); 
   };
 
   const handleStatusChange = async (ticketId, newStatus) => {
+    if (!isAuthorized) {
+      alert("Permission Denied: Only Managers or Administrators can manipulate ticket lifecycle states.");
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('Ticket')
@@ -65,6 +77,8 @@ const Ticket = () => {
   };
 
   const handleUpdateTicket = async () => {
+    if (!isAuthorized) return;
+
     try {
       const selectedTech = technicians.find(
         t => t.employeeID.toString() === editForm.attendById?.toString()
@@ -75,14 +89,12 @@ const Ticket = () => {
         return;
       }
       
-      // Automatically set status to 'pending' if a tech is being assigned
       const updatedPayload = {
         ...editForm,
         attendByName: selectedTech.fullName,
         status: 'pending' 
       };
 
-      // 1. Update the Database
       const { error } = await supabase
         .from('Ticket')
         .update(updatedPayload)
@@ -90,7 +102,6 @@ const Ticket = () => {
 
       if (error) throw error;
 
-      // 2. Trigger Notification (Calling your FastAPI endpoint)
       try {
         await fetch(`http://localhost:8000/resend-notification/${editForm.ticketID}`, {
           method: 'POST'
@@ -100,15 +111,11 @@ const Ticket = () => {
         console.error("Notification failed to send, but database was updated.");
       }
 
-      // 3. Update local state
       setTickets(prev => prev.map(t => t.ticketID === editForm.ticketID ? updatedPayload : t));
-      
-      // Close modal
       setSelectedTicket(null);
       setIsEditing(false);
       
       alert(`Ticket #${editForm.ticketID} assigned to ${selectedTech.fullName} successfully!`);
-
     } catch (err) {
       alert("Error saving changes: " + err.message);
     }
@@ -126,6 +133,7 @@ const Ticket = () => {
     <main className="dashboard-content">
       <header className="glass-header">
         <div className="header-text">
+          <span className="system-badge">Logged in as: {user?.role}</span>
           <h1>Maintenance Tickets</h1>
           <p>Displaying Top {tickets.length} Active Incidents</p>
         </div>
@@ -172,25 +180,35 @@ const Ticket = () => {
                   </div>
                 </td>
                 <td>
-                  {/* KEPT ORIGINAL STATUS COLUMN DESIGN */}
-                  <select 
-                    className={`status-select ${t.status || 'pending'}`}
-                    value={t.status || 'pending'}
-                    onChange={(e) => handleStatusChange(t.ticketID, e.target.value)}
-                  >
-                    <option value="unassigned">UNASSIGNED</option>
-                    <option value="pending">PENDING</option>
-                    <option value="attending">ATTENDING</option>
-                    <option value="completed">COMPLETED</option>
-                  </select>
+                  {/* 2. CONDITIONAL STATUS INTERFACE RENDERING */}
+                  {isAuthorized ? (
+                    <select 
+                      className={`status-select ${t.status || 'pending'}`}
+                      value={t.status || 'pending'}
+                      onChange={(e) => handleStatusChange(t.ticketID, e.target.value)}
+                    >
+                      <option value="unassigned">UNASSIGNED</option>
+                      <option value="pending">PENDING</option>
+                      <option value="attending">ATTENDING</option>
+                      <option value="completed">COMPLETED</option>
+                    </select>
+                  ) : (
+                    <span className={`status-pill-static ${t.status || 'pending'}`}>
+                      {t.status ? t.status.toUpperCase() : 'PENDING'}
+                    </span>
+                  )}
                 </td>
                 <td className="actions-cell" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <button className="detail-btn" onClick={() => openModal(t, false)}>
+                  <button className="detail-btn" onClick={() => openModal(t, false)} title="View Details">
                     <Info size={18} />
                   </button>
-                  <button className="edit-icon-btn" onClick={() => openModal(t, true)} style={{ background: 'none', border: 'none', color: '#4ecca3', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                    <PencilLine size={18} />
-                  </button>
+                  
+                  {/* 3. SHIELD WRAPPER: Edit button only renders for Admin and Managers */}
+                  {isAuthorized && (
+                    <button className="edit-icon-btn" onClick={() => openModal(t, true)} style={{ background: 'none', border: 'none', color: '#4ecca3', cursor: 'pointer', display: 'flex', alignItems: 'center' }} title="Reassign Task Asset">
+                      <PencilLine size={18} />
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -198,12 +216,11 @@ const Ticket = () => {
         </table>
       </div>
 
-      {/* --- MODAL LOGIC --- */}
+      {/* --- MODALS CONTROLS --- */}
       {selectedTicket && (
         <div className="modal-overlay" onClick={() => { setSelectedTicket(null); setIsEditing(false); }}>
           
-          {isEditing ? (
-            /* NEW EDIT MODAL VIEW */
+          {isEditing && isAuthorized ? (
             <div className="modal-content glass-card wide-modal" style={{ width: '450px' }} onClick={e => e.stopPropagation()}>
               <button className="close-btn" onClick={() => { setSelectedTicket(null); setIsEditing(false); }}><X /></button>
               <div className="modal-header">
@@ -245,7 +262,6 @@ const Ticket = () => {
               </div>
             </div>
           ) : (
-            /* YOUR ORIGINAL PREVIEW MODAL VIEW (PRESERVED) */
             <div className="modal-content glass-card ticket-modal" onClick={e => e.stopPropagation()}>
               <button className="close-btn" onClick={() => setSelectedTicket(null)}><X /></button>
               <div className="modal-header">

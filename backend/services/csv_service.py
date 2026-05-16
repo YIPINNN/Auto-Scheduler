@@ -39,10 +39,10 @@ def save_all_to_csv(
 
     print(f"✅ All CSV files saved to {OUTPUT_DIR}/")
 
-def read_result():
-    """Reads the MATLAB output for the frontend."""
-    file_path = os.path.join(OUTPUT_DIR, "result.txt")
-    if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
-            return f.read()
-    return ""
+# def read_result():
+#     """Reads the MATLAB output for the frontend."""
+#     file_path = os.path.join(OUTPUT_DIR, "result.txt")
+#     if os.path.exists(file_path):
+#         with open(file_path, "r", encoding="utf-8") as f:
+#             return f.read()
+#     return ""
