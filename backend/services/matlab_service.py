@@ -3,16 +3,17 @@ import os
 import glob
 import shutil
 
-MATLAB_PATH = r"C:\\Program Files\\MATLAB\\R2025b\\bin\\matlab.exe"
-SCRIPT_PATH = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\Main_LatestLocal.m"
+MATLAB_PATH = r"C:\Program Files\MATLAB\R2021a\bin\matlab.exe"
 
-MATLAB_RESULTS_DIR = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\results"
+SCRIPT_PATH = r"C:\Users\huiying\Desktop\Auto-Scheduler\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\Main_LatestLocal.m"
+
+MATLAB_RESULTS_DIR = r"C:\Users\huiying\Desktop\Auto-Scheduler\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\results"
 
 # Full result history folder in frontend
-FRONTEND_RESULTS_DIR = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\results"
+FRONTEND_RESULTS_DIR = r"C:\Users\huiying\Desktop\Auto-Scheduler\Auto-Scheduler\output\results"
 
 # Simplified latest result file for backend/frontend parsing
-FRONTEND_LATEST_RESULT_FILE = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\result.txt"
+FRONTEND_LATEST_RESULT_FILE = r"C:\Users\huiying\Desktop\Auto-Scheduler\Auto-Scheduler\output\result.txt"
 
 
 def extract_final_assignment_section(full_result_path):

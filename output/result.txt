@@ -1,31 +1,29 @@
 ===== FINAL ASSIGNMENT =====
+Technician 1000251236:
+  2018
+  2009
 Technician 1000262348:
-  2005
+  2012
 Technician 1000286793:
   2003
 Technician 1000293976:
-  2001
-Technician 1000297169:
-  2006
+  2013
 Technician 1000297986:
   2004
 Technician 1000303218:
-  2018
+  2011
 Technician 1000306096:
+  2001
   2008
 Technician 1000311110:
-  2009
-Technician 1000405431:
-  2011
-Technician 26604:
-  2013
-Technician 30222:
-  2012
+  2005
+Technician 31817:
+  2006
 Technician 39306:
-  2010
-  2007
   2017
   2002
+  2007
+  2010
 
 Final Objectives:
 Variance: 0.8289
