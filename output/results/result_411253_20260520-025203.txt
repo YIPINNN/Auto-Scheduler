@@ -1,0 +1,80 @@
+Experiment ID: 411253 
+----------------------
+Start Time: 2026-05-20 02:51:59 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+----------------------
+Use PSF: 1 
+No. of PSF: 5 
+Initial HH Blocks: 2 
+Max HH Blocks: 10 
+Initial Temperature: 350.0000 
+Min Temperature: 0.0001 
+Cooling Rate: 0.1000 
+Objectives: Workload Variance & Penalty 
+------------------------------------------------------------------
+
+===== RUN 1 =====
+Initial Solution:
+Variance: 0.4168
+Penalty: 0.0000
+----------------------
+
+===== FINAL ASSIGNMENT =====
+Technician 1000262348:
+  2008
+Technician 1000294979:
+  2012
+Technician 1000295951:
+  2011
+Technician 1000297986:
+  2004
+Technician 1000299235:
+  2009
+Technician 1000302075:
+  2013
+Technician 1000303510:
+  2003
+Technician 1000311110:
+  2005
+Technician 26604:
+  2006
+Technician 39306:
+  2010
+  2007
+  2002
+Technician 40776:
+  2001
+
+Final Objectives:
+Variance: 0.4168
+Penalty: 0.0000
+
+Statistics:
+No of Acceptance: 1
+No of Rejection: 0
+Iterations: 30
+
+===== PARETO FRONT =====
+Solution 1 (Obj: [0.4168 0.0000])
+Invalid assignment format
+----------------------
+Solution 2 (Obj: [0.4168 0.0000])
+Ticket 2001 → Tech 40776
+Ticket 2002 → Tech 39306
+Ticket 2003 → Tech 1000303510
+Ticket 2004 → Tech 1000297986
+Ticket 2005 → Tech 1000311110
+Ticket 2006 → Tech 26604
+Ticket 2007 → Tech 39306
+Ticket 2008 → Tech 1000262348
+Ticket 2009 → Tech 1000299235
+Ticket 2010 → Tech 39306
+Ticket 2011 → Tech 1000295951
+Ticket 2012 → Tech 1000294979
+Ticket 2013 → Tech 1000302075
+----------------------
+
+===== FINAL SUMMARY =====
+Run 1 Pareto Size: 2
+End Time: 2026-05-20 02:52:12
+Execution Time: 00:00:12
