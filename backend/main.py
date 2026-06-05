@@ -203,11 +203,20 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
             acode = str(t.get('alarmCode') or "0")
             tgrp = str(t.get('targetGroup') or "TECH")
 
+            estimated_duration = (
+                t.get("estimatedDuration")
+                or t.get("processingTime")
+                or t.get("ticketDuration")
+                or t.get("duration")
+                or 1
+            )
+
             if tid not in added_ticket_ids:
-                final_input_rows.append(f"{tid} {acode} {tgrp}")
+                final_input_rows.append(f"{tid} {acode} {tgrp} {estimated_duration}")
                 ticket_details_map[tid] = {
                     'alarm': acode,
-                    'group': tgrp
+                    'group': tgrp,
+                    'estimatedDuration': estimated_duration
                 }
                 added_ticket_ids.add(tid)
             
@@ -217,14 +226,19 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 
         for line in file_lines[start_idx:]:
             parts = line.split()
+
             if len(parts) >= 3:
                 tid, acode, tgrp = parts[0], parts[1], parts[2]
 
+                # 4th column: estimated duration / processing time
+                estimated_duration = int(float(parts[3])) if len(parts) >= 4 else 1
+
                 if tid not in added_ticket_ids:
-                    final_input_rows.append(f"{tid} {acode} {tgrp}")
+                    final_input_rows.append(f"{tid} {acode} {tgrp} {estimated_duration}")
                     ticket_details_map[tid] = {
                         'alarm': acode,
-                        'group': tgrp
+                        'group': tgrp,
+                        'estimatedDuration': estimated_duration
                     }
                     added_ticket_ids.add(tid)
 
@@ -260,6 +274,7 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 
         # 7. PROCESS RESULTS
         full_data = read_result()
+        print("🔍 full_data before save:", full_data)
         assignments = full_data.get("assignments", [])
         
         # --- NEW: Identify Unassigned Tickets ---
@@ -272,12 +287,13 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
         for tid, details in ticket_details_map.items():
             if tid not in assigned_ticket_ids:
                 unassigned_tickets.append({
-                    "ticketID": tid,
-                    "alarmCode": details['alarm'],
-                    "targetGroup": details['group'],
-                    "status": "Unassigned", # Mark clearly for frontend
-                    "attendById": None      # Explicitly null
-                })
+                "ticketID": tid,
+                "alarmCode": details['alarm'],
+                "targetGroup": details['group'],
+                "estimatedDuration": details.get("estimatedDuration", 1),
+                "status": "Unassigned",
+                "attendById": None
+            })
         
         # Log for debugging
         print(f"Total Tickets: {len(ticket_details_map)}")
@@ -286,9 +302,12 @@ async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scena
 
         # Save to Supabase (Add 'computation_time' to your save function)
         save_scenario_to_supabase(
-            scenario_name=scenario_name, 
-            assignments=assignments, 
-            comp_time=algo_duration # Pass the duration here
+            scenario_name=scenario_name,
+            assignments=assignments,
+            comp_time=algo_duration,
+            workload_variance=full_data.get("workloadVariance", 0),
+            makespan=full_data.get("makespan", 0),
+            algorithm_elapsed_time=full_data.get("algorithmElapsedTime", 0)
         )
         
         # --- NEW: Reverse ticket order for chronological Gantt display ---

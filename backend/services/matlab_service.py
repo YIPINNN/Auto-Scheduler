@@ -4,9 +4,9 @@ import glob
 import shutil
 
 MATLAB_PATH = r"C:\\Program Files\\MATLAB\\R2025b\\bin\\matlab.exe"
-SCRIPT_PATH = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\Main_LatestLocal.m"
+SCRIPT_PATH = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\Makespan\Main_LatestLocal.m"
 
-MATLAB_RESULTS_DIR = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\MO-SAHH-yipin2 (single)\mo-sahh-master -finalize\results"
+MATLAB_RESULTS_DIR = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\Makespan\results"
 
 # Full result history folder in frontend
 FRONTEND_RESULTS_DIR = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\results"
@@ -16,14 +16,6 @@ FRONTEND_LATEST_RESULT_FILE = r"C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-fron
 
 
 def extract_final_assignment_section(full_result_path):
-    """
-    Extract only:
-    ===== FINAL ASSIGNMENT =====
-    ...
-    Final Objectives:
-    Variance:
-    Penalty:
-    """
     with open(full_result_path, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
@@ -33,16 +25,25 @@ def extract_final_assignment_section(full_result_path):
     for line in lines:
         stripped = line.strip()
 
-        # Start capturing from FINAL ASSIGNMENT
-        if stripped == "===== FINAL ASSIGNMENT =====":
+        # Start from final assignment section
+        if (
+            stripped == "===== FINAL ASSIGNMENT ====="
+            or stripped == "FINAL BEST SCHEDULE SELECTED:"
+        ):
             capture = True
 
         if capture:
             extracted_lines.append(line)
 
-        # Stop after Penalty line under Final Objectives
+        # Old objective 2
         if capture and stripped.startswith("Penalty:"):
             break
+
+        # New objective 2
+        if capture and stripped.startswith("Makespan:"):
+            # Do not break immediately if technician lines are after Makespan
+            # Only break if your result format places metrics at the end.
+            pass
 
     return "".join(extracted_lines)
 

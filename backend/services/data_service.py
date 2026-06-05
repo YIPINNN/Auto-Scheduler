@@ -43,20 +43,38 @@ def save_assignments(data):
     supabase.table("assignments").insert(data).execute()
 
 
-def save_scenario_to_supabase(scenario_name, assignments, comp_time):
-    """Saves the final MATLAB JSON result into the history table."""
+def save_scenario_to_supabase(
+    scenario_name,
+    assignments,
+    comp_time,
+    workload_variance=0,
+    makespan=0,
+    algorithm_elapsed_time=0
+):
+    """
+    Saves the final MATLAB multi-objective result into Optimization_Results.
+
+    Objective 1: Workload Variance
+    Objective 2: Makespan
+    Performance: Computation Time
+    """
     try:
         supabase = get_supabase()
+
         data = {
             "scenarioName": scenario_name,
             "resultData": assignments,
-            "computationTime": comp_time
+            "computationTime": comp_time,
+            "workloadVariance": workload_variance,
+            "makespan": makespan,
+            "algorithmElapsedTime": algorithm_elapsed_time
         }
+
         return supabase.table("Optimization_Results").insert(data).execute()
+
     except Exception as e:
         print(f"Error saving scenario: {e}")
         return None
-
 
 def sync_tickets_to_supabase(ticket_data_list, file_name):
     """
@@ -71,6 +89,7 @@ def sync_tickets_to_supabase(ticket_data_list, file_name):
                     "ticketID": int(item['id']),
                     "alarmCode": str(item['alarm']),
                     "targetGroup": str(item['group']),
+                    "estimatedDuration": float(item.get("estimatedDuration", 1)),
                     "machineName": f"Machine_{item['id']}",
                     "status": "pending",
                     "lineName": file_name
@@ -133,6 +152,7 @@ def sync_final_results_to_tickets(assignments, tech_map, file_name, ticket_detai
                     "status": item["status"],
                     "alarmCode": str(details.get('alarm', '0')),
                     "targetGroup": str(details.get('group', 'TECH')),
+                    "estimatedDuration": int(float(details.get("estimatedDuration", 1))),
                     "lineName": file_name
                 }
 

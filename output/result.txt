@@ -1,32 +1,29 @@
-===== FINAL ASSIGNMENT =====
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.3658
+Makespan:          120.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000251236:
+  2118
 Technician 1000262348:
-  2005
-Technician 1000286793:
-  2003
+  2013
 Technician 1000293976:
-  2001
-Technician 1000297169:
-  2006
+  2003
 Technician 1000297986:
   2004
 Technician 1000303218:
-  2018
+  2006
 Technician 1000306096:
-  2008
+  2018
 Technician 1000311110:
-  2009
+  2008
 Technician 1000405431:
   2011
 Technician 26604:
-  2013
-Technician 30222:
-  2012
+  2005
 Technician 39306:
-  2010
-  2007
   2017
-  2002
-
-Final Objectives:
-Variance: 0.8289
-Penalty: 0.0000
+  2117
+End Time: 03-Jun-2026 02:40:55 
+Algorithm Elapsed Time: 29.0533 seconds 
+---------------------- 

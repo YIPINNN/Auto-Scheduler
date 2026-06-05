@@ -23,6 +23,11 @@
   flex-shrink: 0;
 }
 
+.perf-details {
+  display: flex;
+  flex-direction: column;
+}
+
 .perf-label {
   display: block;
   font-size: 0.75rem;
@@ -42,13 +47,21 @@
 /* Chart Layout */
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 25px;
 }
 
 .chart-wrapper {
   padding: 30px;
   min-height: 420px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.half-chart {
+  grid-column: span 1;
 }
 
 .chart-header {
@@ -64,6 +77,7 @@
 .chart-header span {
   color: #64748b;
   font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 .recharts-box {
@@ -76,13 +90,228 @@
   outline: none;
 }
 
+.recharts-tooltip-label {
+  color: #fff !important;
+}
+
+.recharts-tooltip-item {
+  color: #fff !important;
+}
+
+/* Header Refresh Button */
+.refresh-btn {
+  border: none;
+  outline: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: rgba(78, 204, 163, 0.14);
+  color: #4ecca3;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.refresh-btn:hover {
+  background: rgba(78, 204, 163, 0.22);
+  transform: translateY(-1px);
+}
+
+/* Loading */
+.loading-card {
+  padding: 30px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* Real Heatmap */
+.heatmap-wrapper {
+  overflow: hidden;
+}
+
+.real-heatmap-scroll {
+  width: 100%;
+  max-height: 330px;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.real-heatmap-table {
+  min-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heatmap-header-row,
+.heatmap-row {
+  display: grid;
+  grid-template-columns: 170px repeat(3, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.heatmap-header-row {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(15, 23, 42, 0.96);
+  padding-bottom: 4px;
+}
+
+.heatmap-name-cell {
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.heatmap-status-cell {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.heatmap-value-cell {
+  height: 34px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.heatmap-empty {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  padding: 28px 12px;
+  text-align: center;
+  border: 1px dashed rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+}
+
+.heatmap-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
+  color: #94a3b8;
+  font-size: 0.78rem;
+  flex-wrap: wrap;
+}
+
+.heatmap-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legend-box.low {
+  background: #4ecca3;
+}
+
+.legend-box.medium {
+  background: #facc15;
+}
+
+.legend-box.high {
+  background: #ef4444;
+}
+
+/* Ticket Summary */
+.ticket-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+}
+
+.ticket-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px;
+  border-radius: 16px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  color: #4ecca3;
+}
+
+.ticket-summary-item span {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.ticket-summary-item strong {
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.ticket-summary-item.warning {
+  color: #facc15;
+}
+
+/* Recharts Legend */
+.recharts-default-legend {
+  color: #94a3b8 !important;
+}
+
+.recharts-legend-item-text {
+  color: #94a3b8 !important;
+}
+
+/* Axis label */
+.recharts-label {
+  font-size: 0.75rem;
+}
+
 /* Responsiveness */
 @media (max-width: 768px) {
   .charts-grid {
     grid-template-columns: 1fr;
   }
-}
 
-.full-width {
-  grid-column: 1 / -1; /* Spans across both columns */
+  .full-width,
+  .half-chart {
+    grid-column: 1 / -1;
+  }
+
+  .chart-wrapper {
+    padding: 20px;
+  }
+
+  .performance-card {
+    padding: 20px;
+  }
+
+  .perf-val {
+    font-size: 1.35rem;
+  }
+
+  .ticket-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .real-heatmap-table {
+    min-width: 480px;
+  }
+
+  .heatmap-header-row,
+  .heatmap-row {
+    grid-template-columns: 150px repeat(3, 1fr);
+  }
 }
