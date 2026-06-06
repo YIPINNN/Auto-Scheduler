@@ -1,0 +1,88 @@
+Experiment ID: 411253 
+---------------------- 
+Start Time: 06-Jun-2026 05:54:05 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Use Problem State Features: 1 
+No. of Problem State Features: 8 
+No. of Evaluations: 31 
+Max No. of Heuristic Blocks: 10 
+Initial No. of Heuristic Blocks: 2 
+Initial Temperature: 350 
+Min. Temperature: 0.00010 
+Cooling Rate: 0.95000 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+06-Jun-2026 05:54:09 
+Run: 0 
+     1      1      1      1    326    161      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1    221      1      1    146 
+   411      1      1     86      1      1    441      1 
+   176      1      1      1      1    441    321    266 
+     1      1      1      1      1     11     41      1 
+0.5469 0.9649 0.9706 0.4854 0.1419 0.9157 0.9595 0.0357 7.0000 6.0000 
+0.9575 0.1576 0.9572 0.8003 0.4218 0.7922 0.6557 0.8491 6.0000 6.0000 
+Variance: 0.4095 
+Makespan: 50.0000 
+Fitness: 0.3645 
+No of Acceptance: 30 
+No of Rejection: 0 
+No of Evaluation: 30 
+Execution Time Per Run: 00:00:04 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.40952380952381 50]):
+Technician 1000262348:
+  2001
+Technician 1000295951:
+  2006
+Technician 1000303510:
+  8
+Technician 1000311110:
+  2005
+Technician 30222:
+  2004
+Technician 40776:
+  2003
+Technician 678910:
+  2002
+  2007
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.40952380952381 50]
+All IGD PE: 
+Run 1: 0.409524
+---------------------- 
+Final Pareto-optimal Solution: [0.40952380952381 50] 
+Final IGD: 0.409524
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.4095
+Makespan:          50.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000262348:
+  2001
+Technician 1000295951:
+  2006
+Technician 1000303510:
+  8
+Technician 1000311110:
+  2005
+Technician 30222:
+  2004
+Technician 40776:
+  2003
+Technician 678910:
+  2002
+  2007
+End Time: 06-Jun-2026 05:54:30 
+Algorithm Elapsed Time: 24.9721 seconds 
+---------------------- 

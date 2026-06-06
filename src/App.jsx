@@ -112,7 +112,10 @@ function App() {
   }
 
   const getTechLoad = (techId) => {
-    const techTasks = allTickets.filter(t => String(t.attendById) === String(techId));
+    const techTasks = allTickets.filter(t => 
+        String(t.attendById) === String(techId) &&
+        ['pending', 'attending'].includes(t.status)
+    );
     return Math.min(techTasks.length * 20, 100);
   };
 

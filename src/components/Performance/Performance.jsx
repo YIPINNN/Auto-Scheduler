@@ -48,9 +48,10 @@ const Performance = () => {
 
     if (value === 'pending') return 'Pending';
     if (value === 'attending') return 'Attending';
-    return 'Unassigned';
-  };
+    if (value === 'completed' || value === 'complete') return 'Completed';
 
+    return null;
+  };
   const fetchPerformanceData = async () => {
     setLoading(true);
 
@@ -86,12 +87,13 @@ const Performance = () => {
         .in('status', [
           'pending',
           'attending',
-          'unassigned',
+          'completed',
+          'complete',
           'Pending',
           'Attending',
-          'Unassigned'
+          'Completed',
+          'Complete'
         ]);
-
       if (ticketsError) {
         console.error('Error fetching Ticket:', ticketsError);
       }
@@ -120,7 +122,8 @@ const Performance = () => {
         totalActive += 1;
 
         const hasTechnician = ticket.attendById && ticket.attendByName;
-        const techName = hasTechnician ? ticket.attendByName : 'Unassigned';
+        if (!hasTechnician) return;
+        const techName = ticket.attendByName;
         const status = hasTechnician ? normalizeStatus(ticket.status) : 'Unassigned';
         const duration = Number(ticket.estimatedDuration || 0);
 
@@ -136,7 +139,7 @@ const Performance = () => {
             displayName: shortenName(techName, 18),
             Pending: 0,
             Attending: 0,
-            Unassigned: 0,
+            Completed: 0,
             totalMinutes: 0,
             ticketCount: 0
           };
@@ -222,12 +225,6 @@ const Performance = () => {
       val: `${latestMakespan || 0}`,
       icon: <Clock />,
       color: '#a855f7'
-    },
-    {
-      label: 'Assigned Rate',
-      val: `${ticketStats.assignedRate}%`,
-      icon: <CheckCircle />,
-      color: '#facc15'
     },
     {
       label: 'Active Tickets',
@@ -453,7 +450,7 @@ const Performance = () => {
                 <div className="heatmap-name-cell">Technician</div>
                 <div className="heatmap-status-cell">Pending</div>
                 <div className="heatmap-status-cell">Attending</div>
-                <div className="heatmap-status-cell">Unassigned</div>
+                <div className="heatmap-status-cell">Completed</div>
               </div>
 
               {workloadHeatmap.length === 0 ? (
@@ -467,7 +464,7 @@ const Performance = () => {
                       {row.displayName}
                     </div>
 
-                    {['Pending', 'Attending', 'Unassigned'].map((status) => (
+                    {['Pending', 'Attending', 'Completed'].map((status) => (
                       <div
                         key={status}
                         className="heatmap-value-cell"

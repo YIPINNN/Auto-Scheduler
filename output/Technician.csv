@@ -1,21 +1,9 @@
 employeeID,fullName,email,targetGroup,jobTitle,endDate,startDate,status,technicianStatusID,jobTitleID,workload,isAvailable
-123456,Tan Yi Pin,yipintan323@gmail.com,Admin,Admin,,2026-05-16T20:22:20.08711+00:00,Active,4a0f686f-0149-446b-9d02-98bef6ddd285,5013,0,True
-26604,Haliza Hamzah,tanyipin42@gmail.com,MFG,"Senior Leader, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,c8bd168e-b1c7-440a-bd7f-2dbb18675578,5007,1,True
-1000297986,Muhammad Fitri Bin Harun,tanyipin42@gmail.com,EE,"Operator 2, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,cf444281-5097-41ca-8725-73bc4ba88389,5005,0,True
-1000311110,CHANEEP A/L AI TIANG,tanyipin42@gmail.com,EE,"Technician 2, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,33a58281-55f0-4921-b875-670ee3720052,5009,0,True
-1000262348,Mohamad Ashraf Bin Sukri,tanyipin42@gmail.com,EE,"Technician 3, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,ef6ac8ee-f281-4d85-bde5-31adbde79121,5010,0,True
-30222,Rosli Abdul Wahab,tanyipin42@gmail.com,EE,"Technician 5, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,41624924-0cdc-4a5f-8eaa-264cb3316b47,5012,1,True
-1000293976,Teoh Kokchuan,tanyipin42@gmail.com,EE,"Technician 5, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,009276a3-92e9-4d8b-b87a-bb1dac3c7d4c,5012,0,True
-1000306096,YOGARAJAN SUPPIAH YOGARAJAN SUPPIAH,tanyipin42@gmail.com,SUPERVISOR,"Technician 5, Engineering",,2026-04-29T23:52:07.08624+00:00,Active,25d9e9fb-3469-4def-ad89-71de59f0acfa,5012,1,True
-1000286793,SAMUS A/L AIPON,tanyipin42@gmail.com,EE,"Technician 3, Engineering",,2026-04-29T23:52:07.08624+00:00,Active,76092ae7-fd5c-4e17-931b-ca4a830420ac,5010,0,True
-1000405431,Muhammad Azridz Bin Mohd Sobri,tanyipin42@gmail.com,MFG,"Operator 2, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,73073a42-bf0e-45e2-8b06-7756be770e36,5005,0,True
-1000297169,Sitie Inardatul Akmar Binti Omar,tanyipin42@gmail.com,MFG,"Operator 3, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,0134a88d-55ec-4724-b73d-5a2ac5d979a2,5010,0,True
+1000262348,Mohamad Ashraf Bin Sukri,tanyipin42@gmail.com,EE,"Technician 3, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,ef6ac8ee-f281-4d85-bde5-31adbde79121,5010,1,True
+40776,Hakimie Idris,tanyipin42@gmail.com,EE,"Technician 4, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,843c0784-c489-4449-9260-256fdc7ccdd0,5011,1,True
+1000311110,CHANEEP A/L AI TIANG,tanyipin42@gmail.com,EE,"Technician 2, Manufacturing Equipment",,2026-04-29T23:52:07.08624+00:00,Active,33a58281-55f0-4921-b875-670ee3720052,5009,1,True
+1000295951,Hafizzul Ishak,tanyipin42@gmail.com,MFG,"Operator 1, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,2003cdbd-4a99-46b2-8105-dfa82ea8c05f,5004,0,True
 1000303218,Barthy A/P Panchinathan,tanyipin42@gmail.com,MFG,"Operator 3, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,1778a117-1a2b-44a1-b92f-7129f7f7ca28,5010,0,True
-1000302270,Rubendran A/L Dek Kumaran,tanyipin42@gmail.com,PE,"Operator 3, Engineering",,2026-04-29T23:52:07.08624+00:00,Active,b1dfdac5-fdb9-4c4d-b597-a476084cec47,5010,0,True
-1000251236,Muhammad Anuar Bin Ismail,tanyipin42@gmail.com,NPI,"Technician 4, Engineering",,2026-04-29T23:52:07.08624+00:00,Active,880708f7-a9a7-4d1f-8b7e-9403fe3b102a,5011,0,True
+678910,uttam karki,tanyipin42@gmail.com,TECH,"Manager, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,f2d6ad77-591c-4687-8449-e0a4837b3af8,5002,1,True
 1000405856,Muhammad Abhimanshah Bin Shaharin,tanyipin42@gmail.com,MFG,"Operator 1, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,70890373-4a6b-4aaa-ade5-71a5c2ad5756,5004,0,True
 1000405724,Amir Wafiq Bin Yusaini Amir,tanyipin42@gmail.com,NPI,"Senior Engineer, Packaging Engineering",,2026-04-29T23:52:07.08624+00:00,Active,de879bd5-c95e-4378-b70a-aa82d478a50a,5006,0,True
-31817,Ritiren Thebe Limbu,tanyipin42@gmail.com,MFG,"Operator 2, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,e39fab4c-e158-4b56-a2fe-db32bd5b17a3,5005,0,True
-39306,uttam karki,tanyipin42@gmail.com,TECH,"Manager, Manufacturing",,2026-04-29T23:52:07.08624+00:00,Active,f2d6ad77-591c-4687-8449-e0a4837b3af8,5002,1,True
-1000306972,LIAN ZHANG YAN,tanyipin42@gmail.com,NPI,"Engineer, Packaging Engineering",,2026-04-29T23:52:07.08624+00:00,Active,5bc92a15-9f26-4a50-a7ed-1983f4c0ec70,5001,0,True
-1000308623,Dhashni Guna Segaran,tanyipin42@gmail.com,PE,"Engineer, Process Engineering",,2026-04-29T23:52:07.08624+00:00,Active,613df461-66ce-4580-ac76-b4a713e30f1b,5001,0,True

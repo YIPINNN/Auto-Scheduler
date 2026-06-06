@@ -1,0 +1,99 @@
+Experiment ID: 411253 
+---------------------- 
+Start Time: 06-Jun-2026 06:05:46 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Use Problem State Features: 1 
+No. of Problem State Features: 8 
+No. of Evaluations: 31 
+Max No. of Heuristic Blocks: 10 
+Initial No. of Heuristic Blocks: 2 
+Initial Temperature: 350 
+Min. Temperature: 0.00010 
+Cooling Rate: 0.95000 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+06-Jun-2026 06:05:49 
+Run: 0 
+Best Schedule Found: 65.0000, Function Evaluation No.: 22 
+     1      1      1      1    191      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1      1      1      1     26 
+     1      1      1      1      1      1      1      1 
+    86      1      1      1      1      1    426      1 
+   176      1      1      1      1    201    251    161 
+    11      1      1      1      1     11      1      1 
+0.6555 0.1712 0.7060 0.0318 0.2769 0.0462 0.0971 0.8235 5.0000 7.0000 
+0.3998 0.6892 0.7482 0.4505 0.0838 0.2290 0.9133 0.1818 6.0000 7.0000 
+0.1361 0.8693 0.5797 0.5499 0.1450 0.8530 0.6221 0.3510 6.0000 1.0000 
+0.2399 0.1233 0.1839 0.2400 0.4173 0.4509 0.9027 0.9448 6.0000 8.0000 
+0.0430 0.3897 0.2417 0.4039 0.0965 0.1320 0.9421 0.9561 1.0000 5.0000 
+0.7447 0.1890 0.6868 0.1835 0.3685 0.6256 0.7802 0.0811 7.0000 1.0000 
+Variance: 0.5536 
+Makespan: 65.0000 
+Fitness: 0.3294 
+No of Acceptance: 30 
+No of Rejection: 0 
+No of Evaluation: 30 
+Execution Time Per Run: 00:00:08 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.553571428571429 65]):
+Technician 1000262348:
+  2012
+  2013
+Technician 1000295951:
+  2006
+Technician 1000303218:
+  2010
+Technician 1000311110:
+  2001
+  2004
+Technician 1000405724:
+  2009
+  2015
+Technician 1000405856:
+  2014
+  2011
+Technician 40776:
+  2016
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.553571428571429 65]
+All IGD PE: 
+Run 1: 0.553571
+---------------------- 
+Final Pareto-optimal Solution: [0.553571428571429 65] 
+Final IGD: 0.553571
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.5536
+Makespan:          65.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000262348:
+  2012
+  2013
+Technician 1000295951:
+  2006
+Technician 1000303218:
+  2010
+Technician 1000311110:
+  2001
+  2004
+Technician 1000405724:
+  2009
+  2015
+Technician 1000405856:
+  2014
+  2011
+Technician 40776:
+  2016
+End Time: 06-Jun-2026 06:06:11 
+Algorithm Elapsed Time: 24.4241 seconds 
+---------------------- 
