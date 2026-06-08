@@ -49,7 +49,8 @@ def save_scenario_to_supabase(
     comp_time,
     workload_variance=0,
     makespan=0,
-    algorithm_elapsed_time=0
+    algorithm_elapsed_time=0,
+    pareto_solutions=None
 ):
     """
     Saves the final MATLAB multi-objective result into Optimization_Results.
@@ -57,6 +58,11 @@ def save_scenario_to_supabase(
     Objective 1: Workload Variance
     Objective 2: Makespan
     Performance: Computation Time
+       resultData:
+        Final best schedule selected by MO-SAHH.
+
+    paretoSolutions:
+        Other global non-dominated schedules for manager preview.
     """
     try:
         supabase = get_supabase()
@@ -64,6 +70,7 @@ def save_scenario_to_supabase(
         data = {
             "scenarioName": scenario_name,
             "resultData": assignments,
+            "paretoSolutions": pareto_solutions or [],
             "computationTime": comp_time,
             "workloadVariance": workload_variance,
             "makespan": makespan,

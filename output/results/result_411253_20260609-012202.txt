@@ -1,0 +1,670 @@
+Experiment ID: 411253 
+---------------------- 
+Start Time: 09-Jun-2026 01:22:01 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Use Problem State Features: 1 
+No. of Problem State Features: 8 
+No. of Evaluations: 301 
+Max No. of Heuristic Blocks: 10 
+Initial No. of Heuristic Blocks: 2 
+Initial Temperature: 350 
+Min. Temperature: 0.00010 
+Cooling Rate: 0.95000 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+09-Jun-2026 01:22:03 
+Run: 0 
+Best Schedule Found: 110.0000, Function Evaluation No.: 54 
+Best Schedule Found: 110.0000, Function Evaluation No.: 188 
+Best Schedule Found: 110.0000, Function Evaluation No.: 228 
+     1      1      1      1   2526   2896     11     11 
+     1      1    556      1      1      1      1     11 
+     1      1     41     11      1     41      1      1 
+     1   3136      1      1   2871      1      1   2451 
+   286      1    706   2861      1     26   2866      1 
+  2121      1    146      1      1    331   2961   3191 
+   741      1      1      1   2161     26   1631      1 
+0.3624 0.0495 0.4896 0.1925 0.1231 0.1548 0.6179 0.2878 4.0000 2.0000 
+0.7306 0.3900 0.8021 0.9891 0.7250 0.9394 0.5842 0.6838 6.0000 8.0000 
+0.3317 0.1522 0.3480 0.1217 0.8842 0.0943 0.9300 0.3990 1.0000 6.0000 
+0.8384 0.1676 0.5022 0.9993 0.3554 0.0471 0.2137 0.5385 1.0000 5.0000 
+0.6032 0.5999 0.4484 0.3801 0.5138 0.4077 0.3829 0.4599 5.0000 4.0000 
+0.7338 0.4372 0.3381 0.9797 0.3990 0.4402 0.1568 0.3260 6.0000 7.0000 
+0.0356 0.8862 0.2469 0.0089 0.8149 0.1405 0.8799 0.0954 6.0000 1.0000 
+Variance: 0.2958 
+Makespan: 110.0000 
+Fitness: 0.3904 
+No of Acceptance: 275 
+No of Rejection: 50 
+No of Evaluation: 300 
+Execution Time Per Run: 00:00:49 
+-------------------------------------------- 
+09-Jun-2026 01:22:52 
+Run: 1 
+Best Schedule Found: 120.0000, Function Evaluation No.: 22 
+Best Schedule Found: 110.0000, Function Evaluation No.: 192 
+     1      1      1      1      1      1   1436      1 
+     1      1    631     11      1      1      1    546 
+     1      1      1    326      1     36      1     36 
+     1    546      1      1      1      1      1      1 
+     1     11      1     66      1    491      1    521 
+     1      1    906      1      1      1      1      1 
+   991      1   1246      1      1     66      1      1 
+0.6592 0.6653 0.0485 0.2503 0.2255 0.7037 0.4872 0.9257 7.0000 3.0000 
+0.6640 0.5359 0.7067 0.2674 0.8041 0.2300 0.4757 0.7852 1.0000 7.0000 
+Variance: 0.2958 
+Makespan: 110.0000 
+Fitness: 0.3904 
+No of Acceptance: 208 
+No of Rejection: 184 
+No of Evaluation: 300 
+Execution Time Per Run: 00:00:52 
+-------------------------------------------- 
+09-Jun-2026 01:23:45 
+Run: 2 
+Best Schedule Found: 120.0000, Function Evaluation No.: 68 
+Best Schedule Found: 110.0000, Function Evaluation No.: 295 
+     1     76    416     86      1   1386      1     26 
+   366   2266      1      1      1      1      1      1 
+   806   3431   2966      1      1    116      1      1 
+  1066      1    476   1801      1      1      1    236 
+     1      1   1746    141      1      1     26      1 
+  1841      1      1     41      1    661   1941   2526 
+   286      1      1    641    826      1   1581   2606 
+0.3096 0.5074 0.5718 0.4411 0.9015 0.2140 0.9723 0.2045 3.0000 2.0000 
+0.1532 0.4075 0.2334 0.5353 0.3116 0.7086 0.5871 0.9041 1.0000 6.0000 
+0.5346 0.7478 0.9700 0.6951 0.2733 0.9511 0.9077 0.4574 6.0000 8.0000 
+0.6803 0.8585 0.8718 0.8971 0.8436 0.4852 0.4885 0.0653 3.0000 3.0000 
+0.5240 0.0459 0.1013 0.4689 0.7106 0.6013 0.2049 0.3410 6.0000 1.0000 
+0.8595 0.7132 0.5750 0.7411 0.7537 0.5551 0.8009 0.6703 4.0000 1.0000 
+0.7515 0.2216 0.4164 0.7909 0.4000 0.0451 0.2010 0.0429 5.0000 4.0000 
+Variance: 0.2958 
+Makespan: 110.0000 
+Fitness: 0.3904 
+No of Acceptance: 267 
+No of Rejection: 66 
+No of Evaluation: 300 
+Execution Time Per Run: 00:00:46 
+-------------------------------------------- 
+09-Jun-2026 01:24:31 
+Run: 3 
+Best Schedule Found: 160.0000, Function Evaluation No.: 0 
+Best Schedule Found: 120.0000, Function Evaluation No.: 3 
+Best Schedule Found: 110.0000, Function Evaluation No.: 8 
+Best Schedule Found: 120.0000, Function Evaluation No.: 35 
+Best Schedule Found: 110.0000, Function Evaluation No.: 195 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1     11    106      1      1 
+     1      1      1     41      1      1      1      1 
+     1      1    246      1      1      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1    131      1      1      1      1 
+   571     46      1      1      1      1      1      1 
+0.4327 0.2604 0.8745 0.5998 0.2581 0.2798 0.2734 0.0061 3.0000 2.0000 
+0.0295 0.5726 0.5725 0.0162 0.8316 0.7872 0.1935 0.5309 6.0000 3.0000 
+0.9250 0.7543 0.8566 0.6024 0.1074 0.4555 0.6546 0.0575 1.0000 7.0000 
+0.2551 0.1557 0.8131 0.6296 0.2884 0.6641 0.5473 0.9899 5.0000 1.0000 
+0.9447 0.7808 0.8250 0.7362 0.7937 0.4052 0.1306 0.1596 5.0000 5.0000 
+Variance: 0.2958 
+Makespan: 110.0000 
+Fitness: 0.3904 
+No of Acceptance: 93 
+No of Rejection: 414 
+No of Evaluation: 300 
+Execution Time Per Run: 00:00:43 
+-------------------------------------------- 
+09-Jun-2026 01:25:15 
+Run: 4 
+Best Schedule Found: 160.0000, Function Evaluation No.: 0 
+Best Schedule Found: 120.0000, Function Evaluation No.: 1 
+Best Schedule Found: 150.0000, Function Evaluation No.: 2 
+Best Schedule Found: 160.0000, Function Evaluation No.: 17 
+Best Schedule Found: 120.0000, Function Evaluation No.: 19 
+Best Schedule Found: 145.0000, Function Evaluation No.: 23 
+Best Schedule Found: 120.0000, Function Evaluation No.: 25 
+Best Schedule Found: 110.0000, Function Evaluation No.: 77 
+   411      1      1    891      1      1   1231      1 
+     1      1      1      1      1      1      1    136 
+     1      1      1    486      1   1206      1    361 
+   636      1      1    121      1      1      1      1 
+     1      1      1      1      1   1191      1   1291 
+     1    291    846      1      1      1      1      1 
+   676      1    976     31      1    256    261      1 
+0.0678 0.8269 0.3963 0.5812 0.3435 0.9712 0.6034 0.6676 5.0000 8.0000 
+0.2327 0.2112 0.2679 0.3945 0.7267 0.9613 0.7502 0.0787 4.0000 1.0000 
+0.9411 0.8929 0.9881 0.9525 0.8742 0.8639 0.1467 0.6498 1.0000 7.0000 
+0.9122 0.3675 0.0380 0.6508 0.8164 0.0838 0.0115 0.3656 3.0000 6.0000 
+0.8602 0.6344 0.5344 0.1564 0.9496 0.4004 0.8564 0.7985 1.0000 1.0000 
+0.4665 0.5844 0.7267 0.3335 0.0637 0.2492 0.8290 0.3729 6.0000 3.0000 
+0.4760 0.3915 0.3189 0.4002 0.8776 0.3361 0.0044 0.6014 1.0000 4.0000 
+0.5407 0.9005 0.0709 0.9838 0.9057 0.9390 0.6719 0.7266 3.0000 4.0000 
+0.4108 0.7703 0.3400 0.8913 0.8554 0.1319 0.6824 0.1496 7.0000 3.0000 
+0.0843 0.4552 0.1883 0.0751 0.3291 0.2273 0.3372 0.5524 7.0000 6.0000 
+Variance: 0.2958 
+Makespan: 110.0000 
+Fitness: 0.3904 
+No of Acceptance: 206 
+No of Rejection: 188 
+No of Evaluation: 300 
+Execution Time Per Run: 00:00:49 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.2958 110]):
+Technician 1000251236:
+  2010
+Technician 1000256724:
+  2110
+  9
+Technician 1000262348:
+  2109
+  2016
+Technician 1000286793:
+  2104
+  2008
+Technician 1000295951:
+  2111
+  2014
+Technician 1000297169:
+  2105
+  2006
+Technician 1000303218:
+  2106
+Technician 1000304282:
+  2112
+  2009
+Technician 1000305966:
+  2101
+  2001
+Technician 1000311110:
+  2108
+  2013
+Technician 1000405724:
+  2015
+Technician 1000405802:
+  2102
+Technician 26604:
+  2113
+  2003
+Technician 40776:
+  2103
+  2012
+Technician 42195:
+  2004
+Technician 678910:
+  2107
+---------------------- 
+Schedule 2 (Objectives: [0.8292 100]):
+Technician 1000251236:
+  9
+Technician 1000256724:
+  2001
+  2110
+Technician 1000262348:
+  2109
+  2004
+Technician 1000286793:
+  2016
+  2105
+Technician 1000295951:
+  2111
+Technician 1000297169:
+  2003
+  2006
+Technician 1000303218:
+  2009
+Technician 1000304282:
+  2010
+Technician 1000305966:
+  2008
+  2101
+  2015
+Technician 1000311110:
+  2012
+  2108
+  2013
+Technician 1000405724:
+  2113
+Technician 1000405802:
+  2102
+Technician 26604:
+  2014
+  2103
+Technician 40776:
+  2104
+Technician 42195:
+  2106
+Technician 678910:
+  2107
+  2112
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [0.2958 110]):
+Technician 1000251236:
+  2010
+Technician 1000256724:
+  9
+  2113
+Technician 1000262348:
+  2101
+  2016
+Technician 1000286793:
+  2008
+  2104
+Technician 1000295951:
+  2111
+  2014
+Technician 1000297169:
+  2006
+  2105
+Technician 1000303218:
+  2108
+Technician 1000304282:
+  2009
+  2112
+Technician 1000305966:
+  2001
+  2110
+Technician 1000311110:
+  2109
+  2013
+Technician 1000405724:
+  2015
+Technician 1000405802:
+  2102
+Technician 26604:
+  2003
+  2106
+Technician 40776:
+  2103
+  2012
+Technician 42195:
+  2004
+Technician 678910:
+  2107
+---------------------- 
+Schedule 2 (Objectives: [0.4292 100]):
+Technician 1000251236:
+  2008
+  2003
+Technician 1000256724:
+  2015
+  2109
+Technician 1000262348:
+  2106
+  2001
+Technician 1000286793:
+  2103
+  2101
+Technician 1000295951:
+  2111
+Technician 1000297169:
+  2010
+  2006
+Technician 1000303218:
+  2009
+  2014
+Technician 1000304282:
+  2108
+Technician 1000305966:
+  2110
+  2105
+Technician 1000311110:
+  9
+  2113
+Technician 1000405724:
+  2016
+Technician 1000405802:
+  2102
+Technician 26604:
+  2013
+  2112
+Technician 40776:
+  2004
+  2012
+Technician 42195:
+  2104
+Technician 678910:
+  2107
+---------------------- 
+
+Pareto Set 3:
+Schedule 1 (Objectives: [0.2958 110]):
+Technician 1000251236:
+  2010
+Technician 1000256724:
+  9
+  2113
+Technician 1000262348:
+  2016
+  2101
+Technician 1000286793:
+  2008
+  2104
+Technician 1000295951:
+  2014
+  2111
+Technician 1000297169:
+  2006
+  2105
+Technician 1000303218:
+  2108
+Technician 1000304282:
+  2009
+  2112
+Technician 1000305966:
+  2001
+  2110
+Technician 1000311110:
+  2013
+  2109
+Technician 1000405724:
+  2015
+Technician 1000405802:
+  2102
+Technician 26604:
+  2003
+  2106
+Technician 40776:
+  2012
+  2103
+Technician 42195:
+  2004
+Technician 678910:
+  2107
+---------------------- 
+Schedule 2 (Objectives: [0.8292 100]):
+Technician 1000251236:
+  2013
+  2015
+Technician 1000256724:
+  2105
+  2108
+Technician 1000262348:
+  2104
+Technician 1000286793:
+  2113
+Technician 1000295951:
+  2111
+Technician 1000297169:
+  2014
+  2006
+Technician 1000303218:
+  2101
+Technician 1000304282:
+  2109
+Technician 1000305966:
+  2106
+  2103
+Technician 1000311110:
+  2016
+  2003
+Technician 1000405724:
+  2008
+  2010
+Technician 1000405802:
+  2102
+Technician 26604:
+  2001
+  9
+  2110
+Technician 40776:
+  2009
+Technician 42195:
+  2012
+  2004
+Technician 678910:
+  2112
+  2107
+---------------------- 
+
+Pareto Set 4:
+Schedule 1 (Objectives: [0.2958 110]):
+Technician 1000251236:
+  2010
+Technician 1000256724:
+  9
+  2105
+Technician 1000262348:
+  2104
+  2008
+Technician 1000286793:
+  2108
+  2013
+Technician 1000295951:
+  2111
+  2014
+Technician 1000297169:
+  2106
+  2006
+Technician 1000303218:
+  2101
+Technician 1000304282:
+  2110
+  2009
+Technician 1000305966:
+  2113
+  2001
+Technician 1000311110:
+  2103
+  2016
+Technician 1000405724:
+  2015
+  2112
+Technician 1000405802:
+  2102
+Technician 26604:
+  2109
+  2003
+Technician 40776:
+  2012
+Technician 42195:
+  2004
+Technician 678910:
+  2107
+---------------------- 
+Schedule 2 (Objectives: [0.5625 100]):
+Technician 1000251236:
+  2102
+Technician 1000256724:
+  2113
+  2015
+Technician 1000262348:
+  2010
+  2003
+Technician 1000286793:
+  2104
+Technician 1000295951:
+  2006
+  2014
+Technician 1000297169:
+  2101
+  2008
+Technician 1000303218:
+  2111
+  2001
+Technician 1000304282:
+  2110
+  9
+Technician 1000305966:
+  2103
+  2106
+Technician 1000311110:
+  2004
+Technician 1000405724:
+  2105
+  2109
+Technician 26604:
+  2108
+  2112
+  2013
+Technician 40776:
+  2009
+  2016
+Technician 42195:
+  2012
+Technician 678910:
+  2107
+---------------------- 
+
+Pareto Set 5:
+Schedule 1 (Objectives: [0.2958 110]):
+Technician 1000251236:
+  2103
+Technician 1000256724:
+  9
+  2010
+Technician 1000262348:
+  2016
+  2003
+Technician 1000286793:
+  2104
+  2008
+Technician 1000295951:
+  2111
+  2014
+Technician 1000297169:
+  2105
+  2006
+Technician 1000303218:
+  2109
+Technician 1000304282:
+  2112
+  2108
+Technician 1000305966:
+  2110
+  2001
+Technician 1000311110:
+  2101
+  2013
+Technician 1000405724:
+  2015
+Technician 1000405802:
+  2102
+Technician 26604:
+  2113
+  2009
+Technician 40776:
+  2106
+  2012
+Technician 42195:
+  2004
+Technician 678910:
+  2107
+---------------------- 
+Schedule 2 (Objectives: [0.8292 100]):
+Technician 1000251236:
+  9
+Technician 1000256724:
+  2008
+  2001
+  2110
+Technician 1000262348:
+  2004
+  2109
+Technician 1000286793:
+  2104
+Technician 1000295951:
+  2111
+Technician 1000297169:
+  2003
+  2006
+Technician 1000303218:
+  2014
+  2009
+Technician 1000304282:
+  2010
+Technician 1000305966:
+  2015
+  2101
+Technician 1000311110:
+  2013
+  2012
+  2108
+Technician 1000405724:
+  2016
+  2105
+Technician 1000405802:
+  2102
+Technician 26604:
+  2113
+Technician 40776:
+  2106
+Technician 42195:
+  2103
+Technician 678910:
+  2112
+  2107
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.2958 110;0.8292 100]
+Pareto Set 2: [0.2958 110;0.4292 100]
+Pareto Set 3: [0.2958 110;0.8292 100]
+Pareto Set 4: [0.2958 110;0.5625 100]
+Pareto Set 5: [0.2958 110;0.8292 100]
+---------------------- 
+Final Pareto-optimal Solution: [0.2958 110;0.4292 100] 
+All IGD PE: 
+Run 1: 5.000445
+Run 2: 5.000445
+Run 3: 5.000445
+Run 4: 5.000445
+Run 5: 5.000445
+Final IGD (mean across runs): 5.000445
+Number of non-dominated solutions: 2 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.2958
+Makespan:          110.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000251236:
+  2010
+Technician 1000256724:
+  2110
+  9
+Technician 1000262348:
+  2109
+  2016
+Technician 1000286793:
+  2104
+  2008
+Technician 1000295951:
+  2111
+  2014
+Technician 1000297169:
+  2105
+  2006
+Technician 1000303218:
+  2106
+Technician 1000304282:
+  2112
+  2009
+Technician 1000305966:
+  2101
+  2001
+Technician 1000311110:
+  2108
+  2013
+Technician 1000405724:
+  2015
+Technician 1000405802:
+  2102
+Technician 26604:
+  2113
+  2003
+Technician 40776:
+  2103
+  2012
+Technician 42195:
+  2004
+Technician 678910:
+  2107
+End Time: 09-Jun-2026 01:26:17 
+Algorithm Elapsed Time: 255.9540 seconds 
+---------------------- 

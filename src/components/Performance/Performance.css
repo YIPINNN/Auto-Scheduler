@@ -315,3 +315,217 @@
     grid-template-columns: 150px repeat(3, 1fr);
   }
 }
+
+.heatmap-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.heatmap-mode-pills {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.heatmap-pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.5);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  letter-spacing: 0.4px;
+}
+
+.heatmap-pill:hover {
+  border-color: #4ecca3;
+  color: #4ecca3;
+}
+
+.heatmap-pill.active {
+  background: rgba(78, 204, 163, 0.15);
+  border-color: #4ecca3;
+  color: #4ecca3;
+}
+
+.heatmap-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.heatmap-date-input {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  padding: 7px 12px;
+  outline: none;
+  transition: border-color 0.18s ease;
+  color-scheme: dark;
+}
+
+.heatmap-date-input:focus {
+  border-color: #4ecca3;
+}
+
+.heatmap-range-sep {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.heatmap-apply-btn {
+  padding: 7px 18px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(78, 204, 163, 0.18);
+  color: #4ecca3;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.heatmap-apply-btn:hover:not(:disabled) {
+  background: rgba(78, 204, 163, 0.28);
+  transform: translateY(-1px);
+}
+
+.heatmap-apply-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.heatmap-fetching {
+  color: #4ecca3 !important;
+  border-color: rgba(78, 204, 163, 0.2) !important;
+}
+
+.heatmap-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.heatmap-mode-pills {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.heatmap-pill {
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.5);
+  color: #94a3b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  letter-spacing: 0.4px;
+}
+
+.heatmap-pill:hover {
+  border-color: #4ecca3;
+  color: #4ecca3;
+}
+
+.heatmap-pill.active {
+  background: rgba(78, 204, 163, 0.15);
+  border-color: #4ecca3;
+  color: #4ecca3;
+}
+
+.heatmap-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.heatmap-date-input {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  color: #cbd5e1;
+  font-size: 0.82rem;
+  padding: 7px 12px;
+  outline: none;
+  transition: border-color 0.18s ease;
+  color-scheme: dark;
+}
+
+.heatmap-date-input:focus {
+  border-color: #4ecca3;
+}
+
+.heatmap-range-sep {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.heatmap-apply-btn {
+  padding: 7px 18px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(78, 204, 163, 0.18);
+  color: #4ecca3;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.heatmap-apply-btn:hover:not(:disabled) {
+  background: rgba(78, 204, 163, 0.28);
+  transform: translateY(-1px);
+}
+
+.heatmap-apply-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.heatmap-fetching {
+  color: #4ecca3 !important;
+  border-color: rgba(78, 204, 163, 0.2) !important;
+}
+
+.history-header-row {
+  grid-template-columns: 170px repeat(2, 1fr);
+}
+
+.history-row {
+  grid-template-columns: 170px repeat(2, 1fr);
+}
+
+.history-count-cell {
+  background: rgba(78, 204, 163, 0.12);
+  border-color: rgba(78, 204, 163, 0.2);
+  color: #4ecca3;
+  font-weight: 800;
+}
+
+.heatmap-legend-note {
+  color: #475569;
+  font-size: 0.72rem;
+  font-style: italic;
+  margin-left: auto;
+}

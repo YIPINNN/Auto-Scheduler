@@ -1,26 +1,49 @@
 FINAL BEST SCHEDULE SELECTED:
-Workload Variance: 0.5536
-Makespan:          65.0000
+Workload Variance: 0.2095
+Makespan:          110.0000
 (Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
 ---------------------- 
+Technician 1000251236:
+  2103
+Technician 1000256724:
+  2016
+  2101
 Technician 1000262348:
-  2012
-  2013
+  9
+  2106
+Technician 1000286793:
+  2004
+  2105
 Technician 1000295951:
   2006
+  2014
+Technician 1000297169:
+  2009
+  2102
 Technician 1000303218:
   2010
+  2111
+Technician 1000304282:
+  2109
+  2112
+Technician 1000305966:
+  2003
+  2110
 Technician 1000311110:
-  2001
-  2004
+  2008
+  2104
 Technician 1000405724:
-  2009
   2015
-Technician 1000405856:
-  2014
-  2011
+Technician 26604:
+  2001
+  2108
 Technician 40776:
-  2016
-End Time: 06-Jun-2026 06:06:11 
-Algorithm Elapsed Time: 24.4241 seconds 
+  2013
+  2113
+Technician 42195:
+  2012
+Technician 678910:
+  2107
+End Time: 09-Jun-2026 02:55:25 
+Algorithm Elapsed Time: 248.2148 seconds 
 ---------------------- 

@@ -1,0 +1,214 @@
+Experiment ID: 411253 
+---------------------- 
+Start Time: 08-Jun-2026 03:39:32 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Use Problem State Features: 1 
+No. of Problem State Features: 8 
+No. of Evaluations: 201 
+Max No. of Heuristic Blocks: 10 
+Initial No. of Heuristic Blocks: 2 
+Initial Temperature: 350 
+Min. Temperature: 0.00010 
+Cooling Rate: 0.95000 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+08-Jun-2026 03:39:33 
+Run: 0 
+     1      1      1      1    801    866      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1   1666      1      1    786 
+    86      1      1    221      1      1    651      1 
+   621      1      1      1      1    301   2081   1991 
+    26      1      1      1     71     11    951      1 
+0.5469 0.9649 0.9706 0.4854 0.1419 0.9157 0.9595 0.0357 7.0000 6.0000 
+0.9575 0.1576 0.9572 0.8003 0.4218 0.7922 0.6557 0.8491 6.0000 6.0000 
+Variance: 0.8000 
+Makespan: 120.0000 
+Fitness: 0.2819 
+No of Acceptance: 194 
+No of Rejection: 12 
+No of Evaluation: 200 
+Execution Time Per Run: 00:00:23 
+-------------------------------------------- 
+08-Jun-2026 03:39:57 
+Run: 1 
+Best Schedule Found: 145.0000, Function Evaluation No.: 71 
+Best Schedule Found: 135.0000, Function Evaluation No.: 114 
+Best Schedule Found: 120.0000, Function Evaluation No.: 152 
+     1      1     11      1      1      1    581      1 
+     1      1      1      1   1401      1      1      1 
+   426      1    231      1      1      1      1      1 
+     1      1      1      1     86   2066      1    716 
+     1      1    951      1      1      1   1631      1 
+     1    456     11      1      1      1   1611   1101 
+   446     11      1      1    651      1    561      1 
+0.2687 0.5934 0.3959 0.6677 0.6480 0.4334 0.1398 0.7519 4.0000 6.0000 
+0.0061 0.3747 0.5786 0.3118 0.2909 0.2425 0.9367 0.8602 5.0000 7.0000 
+0.7118 0.8677 0.1183 0.0390 0.5982 0.6043 0.5164 0.0075 6.0000 7.0000 
+Variance: 0.8000 
+Makespan: 120.0000 
+Fitness: 0.2819 
+No of Acceptance: 174 
+No of Rejection: 52 
+No of Evaluation: 200 
+Execution Time Per Run: 00:00:19 
+-------------------------------------------- 
+08-Jun-2026 03:40:17 
+Run: 2 
+Best Schedule Found: 135.0000, Function Evaluation No.: 8 
+Best Schedule Found: 125.0000, Function Evaluation No.: 15 
+Best Schedule Found: 155.0000, Function Evaluation No.: 18 
+Best Schedule Found: 135.0000, Function Evaluation No.: 19 
+Best Schedule Found: 120.0000, Function Evaluation No.: 57 
+     1   1241      1      1    166      1    671    906 
+   206      1      1      1    966     11      1      1 
+     1      1      1      1      1    701      1      1 
+     1      1      1      1     26   1396      1      1 
+    86      1      1      1      1   1266   1911    261 
+     1   1476     26      1      1      1   1511   1631 
+   661    606      1      1      1   1076   1191      1 
+0.9559 0.3397 0.7898 0.2083 0.6107 0.4726 0.9591 0.1525 4.0000 6.0000 
+0.0959 0.0602 0.8195 0.5845 0.0833 0.8951 0.2856 0.6568 7.0000 6.0000 
+0.5003 0.5703 0.9766 0.9198 0.4009 0.9950 0.2610 0.6653 6.0000 7.0000 
+0.0731 0.5806 0.2870 0.3619 0.7248 0.8583 0.3479 0.6421 6.0000 8.0000 
+0.6173 0.6752 0.6010 0.3463 0.3644 0.1715 0.7954 0.8638 5.0000 7.0000 
+0.8448 0.8165 0.8462 0.3702 0.3832 0.8613 0.9280 0.5705 7.0000 7.0000 
+0.9665 0.8063 0.2222 0.9998 0.0637 0.4255 0.4043 0.4003 3.0000 6.0000 
+0.1513 0.4967 0.8087 0.6329 0.6884 0.6396 0.7293 0.8598 2.0000 5.0000 
+0.9711 0.2976 0.5251 0.8623 0.8964 0.1890 0.6607 0.9412 6.0000 2.0000 
+0.6409 0.8086 0.8534 0.3981 0.1155 0.0803 0.3605 0.8289 4.0000 5.0000 
+0.5223 0.3974 0.4791 0.9939 0.6045 0.9449 0.4904 0.4379 1.0000 5.0000 
+Variance: 0.8000 
+Makespan: 120.0000 
+Fitness: 0.2819 
+No of Acceptance: 169 
+No of Rejection: 62 
+No of Evaluation: 200 
+Execution Time Per Run: 00:00:20 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.8 120]):
+Technician 1000303218:
+  2014
+  2006
+  2011
+  2009
+Technician 1000311110:
+  2008
+  2005
+  2010
+Technician 1000405724:
+  2016
+  2001
+  2003
+  2015
+Technician 40776:
+  2013
+  2004
+  9
+  2012
+Technician 678910:
+  2007
+  2002
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [0.8 120]):
+Technician 1000303218:
+  2014
+  2011
+  2006
+  2009
+Technician 1000311110:
+  2008
+  2005
+  2010
+Technician 1000405724:
+  2003
+  2015
+  2001
+  2016
+Technician 40776:
+  9
+  2012
+  2004
+  2013
+Technician 678910:
+  2007
+  2002
+---------------------- 
+
+Pareto Set 3:
+Schedule 1 (Objectives: [0.8 120]):
+Technician 1000303218:
+  2006
+  2014
+  2011
+  2009
+Technician 1000311110:
+  2010
+  2005
+  2008
+Technician 1000405724:
+  2016
+  2001
+  2003
+  2015
+Technician 40776:
+  2013
+  2004
+  9
+  2012
+Technician 678910:
+  2007
+  2002
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.8 120]
+Pareto Set 2: [0.8 120]
+Pareto Set 3: [0.8 120]
+---------------------- 
+Final Pareto-optimal Solution: [0.8 120] 
+All IGD PE: 
+Run 1: 0.000000
+Run 2: 0.000000
+Run 3: 0.000000
+Final IGD (mean across runs): 0.000000
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.8000
+Makespan:          120.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000303218:
+  2014
+  2006
+  2011
+  2009
+Technician 1000311110:
+  2008
+  2005
+  2010
+Technician 1000405724:
+  2016
+  2001
+  2003
+  2015
+Technician 40776:
+  2013
+  2004
+  9
+  2012
+Technician 678910:
+  2007
+  2002
+End Time: 08-Jun-2026 03:40:47 
+Algorithm Elapsed Time: 74.7501 seconds 
+---------------------- 

@@ -6,10 +6,19 @@ import "./Schedule.css";
 const Schedule = ({ technicians = [] }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [results, setResults] = useState([]); 
+  const [results, setResults] = useState([]);
+  const [finalResults, setFinalResults] = useState([]);
   const [rawOutput, setRawOutput] = useState([]);
-  const [scenarios, setScenarios] = useState([]); 
+  const [scenarios, setScenarios] = useState([]);
   const [scenarioName, setScenarioName] = useState("");
+
+  const [paretoSolutions, setParetoSolutions] = useState([]);
+  const [selectedSolution, setSelectedSolution] = useState(null);
+  const [showAlternatives, setShowAlternatives] = useState(false);
+  const [finalMetrics, setFinalMetrics] = useState({
+    workloadVariance: 0,
+    makespan: 0
+  });
 
   // Live tracking states
   const [unassignedTickets, setUnassignedTickets] = useState([]);
@@ -22,6 +31,30 @@ const Schedule = ({ technicians = [] }) => {
     acc[String(tech.employeeID)] = tech.fullName;
     return acc;
   }, {});
+
+  const applyFinalScheduleToView = (finalResult, alternatives, metrics = {}) => {
+    const safeFinal = Array.isArray(finalResult) ? finalResult : [];
+    const safeAlternatives = Array.isArray(alternatives) ? alternatives : [];
+
+    setResults(safeFinal);
+    setFinalResults(safeFinal);
+    setParetoSolutions(safeAlternatives);
+
+    const nextMetrics = {
+      workloadVariance: Number(metrics.workloadVariance || 0),
+      makespan: Number(metrics.makespan || 0)
+    };
+
+    setFinalMetrics(nextMetrics);
+
+    setSelectedSolution({
+      solutionID: "final",
+      isBest: true,
+      workloadVariance: nextMetrics.workloadVariance,
+      makespan: nextMetrics.makespan,
+      assignments: safeFinal
+    });
+  };
 
   useEffect(() => {
     fetchScenarios();
@@ -81,11 +114,18 @@ const Schedule = ({ technicians = [] }) => {
       const data = await response.json();
       if (data.status === "success") {
         const finalResult = Array.isArray(data.result) ? data.result : [];
-        setResults(finalResult); 
+        const alternatives = Array.isArray(data.paretoSolutions) ? data.paretoSolutions : [];
+
+        applyFinalScheduleToView(finalResult, alternatives, {
+          workloadVariance: data.workloadVariance,
+          makespan: data.makespan
+        });
+
         setRawOutput(finalResult.map(res => {
           const name = techLookup[String(res.tech)] || "Unknown";
           return `ALGORITHM: ${name} (ID: ${res.tech}) optimized with ${res.tickets.length} tasks.`;
         }));
+
         fetchScenarios(); 
         fetchUnassigned();
         alert("MO-SAHH Algorithm: Optimization Complete & Saved!");
@@ -105,6 +145,8 @@ const Schedule = ({ technicians = [] }) => {
       if (fileInputElement) fileInputElement.value = "";
     }
   };
+
+  
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -151,8 +193,15 @@ const Schedule = ({ technicians = [] }) => {
       const data = await response.json();
       if (data.status === "success") {
         const finalResult = Array.isArray(data.result) ? data.result : [];
-        setResults(finalResult); 
+        const alternatives = Array.isArray(data.paretoSolutions) ? data.paretoSolutions : [];
+
+        applyFinalScheduleToView(finalResult, alternatives, {
+          workloadVariance: data.workloadVariance,
+          makespan: data.makespan
+        });
+
         setRawOutput(prev => [...prev, `RESCHEDULE: Optimization triggered for existing pending tickets.`]);
+
         fetchScenarios(); 
         fetchUnassigned();
         alert("Rescheduling Complete!");
@@ -293,10 +342,37 @@ const Schedule = ({ technicians = [] }) => {
 
       {/* --- SECTION 4: GANTT CHART --- */}
       <section className="glass-card schedule-viz">
-        <div className="title-group">
+        <div className="gantt-title-row">
+          <div className="title-group">
             <Terminal size={18} color="#4ecca3" />
             <h3>Assignment Timeline (Gantt Visualizer Array)</h3>
+          </div>
+
+          {paretoSolutions.length > 0 && (
+            <button
+              className="alternative-btn"
+              onClick={() => setShowAlternatives(true)}
+            >
+              Review Alternative Schedules ({paretoSolutions.length})
+            </button>
+          )}
         </div>
+
+        {selectedSolution && (
+          <div className="selected-solution-banner">
+            <strong>
+              {selectedSolution.solutionID === "final"
+                ? "Current View: Final Best Schedule"
+                : `Current View: Alternative Solution ${selectedSolution.solutionID}`}
+            </strong>
+            <span>
+              Workload Variance: {Number(selectedSolution.workloadVariance || 0).toFixed(4)}
+              {" | "}
+              Makespan: {Number(selectedSolution.makespan || 0).toFixed(0)} min
+            </span>
+          </div>
+        )}
+
         <div className="gantt-container">
           {results.length > 0 ? (
             results.map((row, idx) => {
@@ -341,6 +417,86 @@ const Schedule = ({ technicians = [] }) => {
         </div>
       </section>
 
+            {showAlternatives && (
+              <div className="alternative-modal-backdrop">
+                <div className="alternative-modal glass-card">
+                  <div className="alternative-modal-header">
+                    <div>
+                      <h3>Alternative Non-Dominated Schedules</h3>
+                      <p>
+                        Preview different trade-offs between workload variance and makespan.
+                      </p>
+                    </div>
+
+                    <button
+                      className="alternative-close-btn"
+                      onClick={() => setShowAlternatives(false)}
+                    >
+                      ×
+                    </button>
+                  </div>
+
+                  <div className="alternative-list">
+                    <button
+                      className={`alternative-card ${selectedSolution?.solutionID === "final" ? "active" : ""}`}
+                      onClick={() => {
+                        setResults(finalResults);
+                        setSelectedSolution({
+                          solutionID: "final",
+                          isBest: true,
+                          workloadVariance: finalMetrics.workloadVariance,
+                          makespan: finalMetrics.makespan,
+                          assignments: finalResults
+                        });
+                        setShowAlternatives(false);
+                      }}
+                    >
+                      <div>
+                        <strong>Final Best Schedule</strong>
+                        <span>
+                          Variance: {Number(finalMetrics.workloadVariance || 0).toFixed(4)}
+                          {" | "}
+                          Makespan: {Number(finalMetrics.makespan || 0).toFixed(0)} min
+                        </span>
+                      </div>
+
+                      <span className="preview-tag">Applied</span>
+                    </button>
+
+                    {paretoSolutions.map((solution) => (
+                      <button
+                        key={`${solution.solutionID}-${solution.workloadVariance}-${solution.makespan}`}
+                        className={`alternative-card ${solution.isBest ? "best" : ""}`}
+                        onClick={() => {
+                          setResults(solution.assignments || []);
+                          setSelectedSolution(solution);
+                          setShowAlternatives(false);
+                        }}
+                      >
+                        <div>
+                          <strong>
+                            Solution {solution.solutionID}
+                            {solution.isBest ? " — Final Best" : ""}
+                          </strong>
+                          <span>
+                            Variance: {Number(solution.workloadVariance || 0).toFixed(4)}
+                            {" | "}
+                            Makespan: {Number(solution.makespan || 0).toFixed(0)} min
+                          </span>
+                        </div>
+
+                        <span className="preview-tag">Preview</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="alternative-note">
+                    Preview only. No ticket reassignment is made when viewing alternatives.
+                  </div>
+                </div>
+              </div>
+            )}
+
       {/* --- SECTION 5: DEBUG LOGS --- */}
       {rawOutput.length > 0 && (
         <section className="glass-card debug-terminal">
@@ -367,7 +523,17 @@ const Schedule = ({ technicians = [] }) => {
         <div className="history-grid">
           {scenarios.map((s) => (
             <button key={s.resultID} className={`history-item ${scenarioName === s.scenarioName ? "active-history" : ""}`}
-              onClick={() => { setResults([...s.resultData]); setScenarioName(s.scenarioName); }}>
+              onClick={() => {
+                const finalResult = Array.isArray(s.resultData) ? s.resultData : [];
+                const alternatives = Array.isArray(s.paretoSolutions) ? s.paretoSolutions : [];
+
+                applyFinalScheduleToView(finalResult, alternatives, {
+                  workloadVariance: s.workloadVariance,
+                  makespan: s.makespan
+                });
+
+                setScenarioName(s.scenarioName);
+              }}>
               <strong>{s.scenarioName}</strong>
               <small>{new Date(s.created_at).toLocaleString()}</small>
             </button>

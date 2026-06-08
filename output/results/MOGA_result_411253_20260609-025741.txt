@@ -1,0 +1,343 @@
+Experiment ID: 411253 
+---------------------- 
+Algorithm: MOGA (NSGA-II) 
+Start Time: 09-Jun-2026 02:57:38 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Population Size: 20 
+Max Generations: 50 
+Crossover Rate: 0.90 
+Mutation Rate: 0.05 
+No. of Runs: 5 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+09-Jun-2026 02:57:41 
+Run: 0 
+Variance: 0.7810 
+Makespan: 110.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:03 
+-------------------------------------------- 
+09-Jun-2026 02:57:44 
+Run: 1 
+Variance: 0.7810 
+Makespan: 110.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:02 
+-------------------------------------------- 
+09-Jun-2026 02:57:47 
+Run: 2 
+Variance: 0.7810 
+Makespan: 110.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:02 
+-------------------------------------------- 
+09-Jun-2026 02:57:50 
+Run: 3 
+Variance: 0.7810 
+Makespan: 110.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:02 
+-------------------------------------------- 
+09-Jun-2026 02:57:52 
+Run: 4 
+Variance: 0.7810 
+Makespan: 110.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:02 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.780952380952381 110]):
+Technician 1000256724:
+  2013
+  2110
+  2102
+  2015
+Technician 26604:
+  2108
+  2014
+  2112
+Technician 40776:
+  2103
+  2004
+Technician 1000311110:
+  2003
+  2012
+Technician 1000295951:
+  2111
+  2113
+Technician 1000262348:
+  2008
+  2104
+Technician 1000286793:
+  2010
+Technician 1000305966:
+  2101
+Technician 1000303218:
+  2006
+  2001
+Technician 678910:
+  2107
+  2016
+Technician 1000251236:
+  2009
+Technician 1000297169:
+  2106
+Technician 1000304282:
+  2105
+Technician 1000405724:
+  2109
+Technician 42195:
+  9
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [0.780952380952381 110]):
+Technician 1000256724:
+  2001
+  2110
+  2102
+  2015
+Technician 26604:
+  2105
+  2112
+  2014
+Technician 40776:
+  2104
+  2103
+Technician 1000311110:
+  2012
+  2008
+Technician 1000295951:
+  2013
+  2111
+Technician 1000262348:
+  9
+  2004
+Technician 1000286793:
+  2009
+Technician 1000305966:
+  2016
+Technician 1000303218:
+  2003
+  2006
+Technician 678910:
+  2107
+  2113
+Technician 1000251236:
+  2010
+Technician 1000297169:
+  2108
+Technician 1000304282:
+  2106
+Technician 1000405724:
+  2101
+Technician 42195:
+  2109
+---------------------- 
+
+Pareto Set 3:
+Schedule 1 (Objectives: [0.780952380952381 110]):
+Technician 1000256724:
+  2013
+  2110
+  2102
+  2015
+Technician 26604:
+  9
+  2112
+  2014
+Technician 40776:
+  2008
+  2012
+Technician 1000311110:
+  2103
+  2104
+Technician 1000295951:
+  2108
+  2111
+Technician 1000262348:
+  2101
+  2004
+Technician 1000286793:
+  2010
+Technician 1000305966:
+  2001
+Technician 1000303218:
+  2003
+  2006
+Technician 678910:
+  2107
+  2109
+Technician 1000251236:
+  2113
+Technician 1000297169:
+  2105
+Technician 1000304282:
+  2106
+Technician 1000405724:
+  2009
+Technician 42195:
+  2016
+---------------------- 
+
+Pareto Set 4:
+Schedule 1 (Objectives: [0.780952380952381 110]):
+Technician 1000256724:
+  2015
+  2101
+  2102
+  2112
+Technician 26604:
+  2103
+  2006
+  2110
+Technician 40776:
+  2012
+  2009
+Technician 1000311110:
+  2104
+  2008
+Technician 1000295951:
+  2111
+  2113
+Technician 1000262348:
+  2108
+  2004
+Technician 1000286793:
+  2106
+Technician 1000305966:
+  9
+Technician 1000303218:
+  2014
+  2003
+Technician 678910:
+  2107
+  2013
+Technician 1000251236:
+  2016
+Technician 1000297169:
+  2109
+Technician 1000304282:
+  2105
+Technician 1000405724:
+  2010
+Technician 42195:
+  2001
+---------------------- 
+
+Pareto Set 5:
+Schedule 1 (Objectives: [0.780952380952381 110]):
+Technician 1000256724:
+  2106
+  2015
+  2112
+  2102
+Technician 26604:
+  2014
+  9
+  2110
+Technician 40776:
+  2104
+  2008
+Technician 1000311110:
+  2103
+  2012
+Technician 1000295951:
+  2111
+  2009
+Technician 1000262348:
+  2105
+  2004
+Technician 1000286793:
+  2108
+Technician 1000305966:
+  2101
+Technician 1000303218:
+  2109
+  2006
+Technician 678910:
+  2107
+  2001
+Technician 1000251236:
+  2010
+Technician 1000297169:
+  2003
+Technician 1000304282:
+  2016
+Technician 1000405724:
+  2113
+Technician 42195:
+  2013
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.780952380952381 110]
+Pareto Set 2: [0.780952380952381 110]
+Pareto Set 3: [0.780952380952381 110]
+Pareto Set 4: [0.780952380952381 110]
+Pareto Set 5: [0.780952380952381 110]
+All IGD: 
+Run 1: 0.780952
+Run 2: 0.780952
+Run 3: 0.780952
+Run 4: 0.780952
+Run 5: 0.780952
+---------------------- 
+Final Pareto-optimal Solution: [0.780952380952381 110] 
+Final IGD: 0.780952
+Final Hypervolume: 12.9371
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.7810
+Makespan:          110.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000256724:
+  2013
+  2110
+  2102
+  2015
+Technician 26604:
+  2108
+  2014
+  2112
+Technician 40776:
+  2103
+  2004
+Technician 1000311110:
+  2003
+  2012
+Technician 1000295951:
+  2111
+  2113
+Technician 1000262348:
+  2008
+  2104
+Technician 1000286793:
+  2010
+Technician 1000305966:
+  2101
+Technician 1000303218:
+  2006
+  2001
+Technician 678910:
+  2107
+  2016
+Technician 1000251236:
+  2009
+Technician 1000297169:
+  2106
+Technician 1000304282:
+  2105
+Technician 1000405724:
+  2109
+Technician 42195:
+  9
+End Time: 09-Jun-2026 02:57:55 
+Algorithm Elapsed Time: 17.2997 seconds 
+---------------------- 
