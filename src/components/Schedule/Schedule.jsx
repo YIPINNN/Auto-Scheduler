@@ -62,11 +62,19 @@ const Schedule = ({ technicians = [] }) => {
   }, []);
 
   const fetchScenarios = async () => {
-    const { data } = await supabase
-      .from('Optimization_Results')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (data) setScenarios(data);
+    try {
+      const { data, error } = await supabase
+        .from('Optimization_Results')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      setScenarios(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error fetching scenarios:", err.message);
+      setScenarios([]);
+    }
   };
 
   const fetchUnassigned = async () => {
@@ -123,12 +131,19 @@ const Schedule = ({ technicians = [] }) => {
 
         setRawOutput(finalResult.map(res => {
           const name = techLookup[String(res.tech)] || "Unknown";
-          return `ALGORITHM: ${name} (ID: ${res.tech}) optimized with ${res.tickets.length} tasks.`;
+          return `ALGORITHM: ${name} (ID: ${res.tech}) optimized with ${Array.isArray(res.tickets) ? res.tickets.length : 0} tasks.`;
         }));
 
-        fetchScenarios(); 
-        fetchUnassigned();
-        alert("MO-SAHH Algorithm: Optimization Complete & Saved!");
+        alert(
+          "Optimization Complete!\n\n" +
+          "MO-SAHH scheduling has been completed and saved.\n" +
+          "MOGA baseline comparison has also completed."
+        );
+
+        setTimeout(() => {
+          fetchScenarios();
+          fetchUnassigned();
+        }, 800);
       } else {
         throw new Error(data.message || "Optimization failed");
       }
@@ -200,11 +215,21 @@ const Schedule = ({ technicians = [] }) => {
           makespan: data.makespan
         });
 
-        setRawOutput(prev => [...prev, `RESCHEDULE: Optimization triggered for existing pending tickets.`]);
+        setRawOutput(prev => [
+          ...prev,
+          `APPLY ALTERNATIVE: Solution ${solution.solutionID} applied. Updated ${data.updatedCount}, skipped ${data.skippedCount}, emails sent ${data.notificationCount || 0}.`
+        ]);
 
-        fetchScenarios(); 
-        fetchUnassigned();
-        alert("Rescheduling Complete!");
+        alert(
+          "Rescheduling Complete!\n\n" +
+          "MO-SAHH rescheduling has been completed and saved.\n" +
+          "MOGA baseline comparison has also completed."
+        );
+
+        setTimeout(() => {
+          fetchScenarios();
+          fetchUnassigned();
+        }, 800);
       } else {
         throw new Error(data.message || "Rescheduling engine rejection");
       }
@@ -221,6 +246,82 @@ const Schedule = ({ technicians = [] }) => {
       setIsProcessing(false);
     }
   };
+
+  const handleApplyAlternativeSchedule = async (solution) => {
+    if (!solution || !Array.isArray(solution.assignments)) {
+      alert("Invalid alternative schedule.");
+      return;
+    }
+
+    const confirmApply = window.confirm(
+      `Apply Solution ${solution.solutionID}?\n\n` +
+      `Workload Variance: ${Number(solution.workloadVariance || 0).toFixed(4)}\n` +
+      `Makespan: ${Number(solution.makespan || 0).toFixed(0)} min\n\n` +
+      `Only Pending and Unassigned tickets will be reassigned.\n` +
+      `Attending and Completed tickets will not be changed.`
+    );
+
+    if (!confirmApply) return;
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/apply-alternative-schedule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          solutionID: solution.solutionID,
+          workloadVariance: Number(solution.workloadVariance || 0),
+          makespan: Number(solution.makespan || 0),
+          assignments: solution.assignments,
+          technicianLookup: techLookup
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.status !== "success") {
+        throw new Error(data.message || data.detail || "Failed to apply alternative schedule.");
+      }
+
+      setResults(solution.assignments || []);
+      setFinalResults(solution.assignments || []);
+      setFinalMetrics({
+        workloadVariance: Number(solution.workloadVariance || 0),
+        makespan: Number(solution.makespan || 0)
+      });
+
+      setSelectedSolution({
+        ...solution,
+        solutionID: solution.solutionID,
+        isAppliedAlternative: true
+      });
+
+      setRawOutput(prev => [
+        ...prev,
+        `APPLY ALTERNATIVE: Solution ${solution.solutionID} applied. Updated ${data.updatedCount}, skipped ${data.skippedCount}.`
+      ]);
+
+      setShowAlternatives(false);
+
+      fetchUnassigned();
+      fetchScenarios();
+
+      alert(
+        `Alternative schedule applied.\n\n` +
+        `Updated tickets: ${data.updatedCount}\n` +
+        `Skipped tickets: ${data.skippedCount}\n` +
+        `Email notifications sent: ${data.notificationCount || 0}`
+      );
+    } catch (error) {
+      console.error("Apply alternative schedule error:", error);
+      alert(`Failed to apply alternative schedule: ${error.message}`);
+    }
+  };
+
+  const alternativeOnlySolutions = paretoSolutions.filter(
+    (solution) => !solution.isBest
+  );
 
   return (
     <main className="dashboard-content">
@@ -399,7 +500,7 @@ const Schedule = ({ technicians = [] }) => {
                     </div>
                   </div>
                   <div className="gantt-track" style={{ display: 'flex', gap: '8px', flexGrow: 1, padding: '4px' }}>
-                    {row.tickets && row.tickets.map((ticket, tIdx) => (
+                    {Array.isArray(row.tickets) && row.tickets.map((ticket, tIdx) => (
                       <div key={tIdx} className="gantt-block" style={{ backgroundColor: avatarColor, padding: '8px 16px', borderRadius: '8px', color: '#0f172a', fontWeight: '800', fontSize: '0.8rem', minWidth: '70px', textAlign: 'center', boxShadow: `0 4px 10px ${avatarColor}33` }}>
                         T-{String(ticket)}
                       </div>
@@ -435,63 +536,110 @@ const Schedule = ({ technicians = [] }) => {
                       ×
                     </button>
                   </div>
-
+                
                   <div className="alternative-list">
-                    <button
-                      className={`alternative-card ${selectedSolution?.solutionID === "final" ? "active" : ""}`}
-                      onClick={() => {
-                        setResults(finalResults);
-                        setSelectedSolution({
-                          solutionID: "final",
-                          isBest: true,
-                          workloadVariance: finalMetrics.workloadVariance,
-                          makespan: finalMetrics.makespan,
-                          assignments: finalResults
-                        });
-                        setShowAlternatives(false);
-                      }}
-                    >
-                      <div>
-                        <strong>Final Best Schedule</strong>
-                        <span>
-                          Variance: {Number(finalMetrics.workloadVariance || 0).toFixed(4)}
-                          {" | "}
-                          Makespan: {Number(finalMetrics.makespan || 0).toFixed(0)} min
-                        </span>
+                    <div className="solution-group">
+                      <div className="solution-group-title">
+                        <span>Selected Final Best Solution</span>
                       </div>
 
-                      <span className="preview-tag">Applied</span>
-                    </button>
-
-                    {paretoSolutions.map((solution) => (
-                      <button
-                        key={`${solution.solutionID}-${solution.workloadVariance}-${solution.makespan}`}
-                        className={`alternative-card ${solution.isBest ? "best" : ""}`}
-                        onClick={() => {
-                          setResults(solution.assignments || []);
-                          setSelectedSolution(solution);
-                          setShowAlternatives(false);
-                        }}
+                      <div
+                        className={`alternative-card final-best-card ${
+                          selectedSolution?.solutionID === "final" ? "active" : ""
+                        }`}
                       >
-                        <div>
-                          <strong>
-                            Solution {solution.solutionID}
-                            {solution.isBest ? " — Final Best" : ""}
-                          </strong>
-                          <span>
-                            Variance: {Number(solution.workloadVariance || 0).toFixed(4)}
-                            {" | "}
-                            Makespan: {Number(solution.makespan || 0).toFixed(0)} min
-                          </span>
-                        </div>
+                        <button
+                          type="button"
+                          className="alternative-preview-area"
+                          onClick={() => {
+                            setResults(finalResults);
+                            setSelectedSolution({
+                              solutionID: "final",
+                              isBest: true,
+                              workloadVariance: finalMetrics.workloadVariance,
+                              makespan: finalMetrics.makespan,
+                              assignments: finalResults
+                            });
+                            setShowAlternatives(false);
+                          }}
+                        >
+                          <div className="solution-main-info">
+                            <div className="solution-title-row">
+                              <strong>Final Best Schedule</strong>
+                              <span className="best-badge">Recommended</span>
+                            </div>
 
-                        <span className="preview-tag">Preview</span>
-                      </button>
-                    ))}
+                            <div className="solution-metrics">
+                              <span>Variance: {Number(finalMetrics.workloadVariance || 0).toFixed(4)}</span>
+                              <span>Makespan: {Number(finalMetrics.makespan || 0).toFixed(0)} min</span>
+                            </div>
+                          </div>
+
+                          <span className="applied-tag">Applied</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="solution-divider"></div>
+
+                    <div className="solution-group">
+                      <div className="solution-group-title">
+                        <span>Full Pareto Non-Dominated Solutions</span>
+                      </div>
+
+                      <div className="pareto-solution-list">
+                        {paretoSolutions.map((solution) => (
+                          <div
+                            key={`${solution.solutionID}-${solution.workloadVariance}-${solution.makespan}`}
+                            className={`alternative-card pareto-card ${solution.isBest ? "pareto-final-card" : ""}`}
+                          >
+                            <button
+                              type="button"
+                              className="alternative-preview-area"
+                              onClick={() => {
+                                setResults(solution.assignments || []);
+                                setSelectedSolution(solution);
+                                setShowAlternatives(false);
+                              }}
+                            >
+                              <div className="solution-main-info">
+                                <div className="solution-title-row">
+                                  <strong>
+                                    Solution {solution.solutionID}
+                                    {solution.isBest ? " — Final Best" : ""}
+                                  </strong>
+
+                                  {solution.isBest && (
+                                    <span className="best-badge small">Same as Recommended</span>
+                                  )}
+                                </div>
+
+                                <div className="solution-metrics">
+                                  <span>Variance: {Number(finalMetrics.workloadVariance || 0).toFixed(4)}</span>
+                                  <span>•</span>
+                                  <span>Makespan: {Number(finalMetrics.makespan || 0).toFixed(0)} min</span>
+                                </div>
+                              </div>
+
+                              <span className="preview-tag">Preview</span>
+                            </button>
+
+                            {!solution.isBest && (
+                              <button
+                                type="button"
+                                className="apply-alternative-btn"
+                                onClick={() => handleApplyAlternativeSchedule(solution)}
+                              >
+                                Apply
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-
                   <div className="alternative-note">
-                    Preview only. No ticket reassignment is made when viewing alternatives.
+                    The recommended final best schedule is already applied. Other Pareto solutions can be previewed, and only non-final alternatives can be applied. Attending and Completed tickets are protected.
                   </div>
                 </div>
               </div>

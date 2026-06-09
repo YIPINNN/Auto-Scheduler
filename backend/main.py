@@ -1,6 +1,7 @@
 import re
 import time
-from fastapi import FastAPI, UploadFile, File, BackgroundTasks
+import threading
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from backend.services.file_service import update_config_file, read_result, read_moga_result
 from backend.services.matlab_service import run_matlab, run_moga
@@ -10,7 +11,7 @@ from backend.services.email_service import send_dispatch_notification
 from backend.supabase_client import get_supabase
 from contextlib import asynccontextmanager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Import data services
 from backend.services.data_service import (
@@ -27,6 +28,7 @@ from backend.services.data_service import (
 
 scheduler = AsyncIOScheduler()
 is_running = False
+is_moga_running = False
 
 async def auto_schedule_unassigned():
     global is_running
@@ -75,14 +77,17 @@ app.add_middleware(
 )
 
 def run_moga_background():
-    """
-    Runs MOGA after MO-SAHH response is already returned to the frontend.
-    Reads the same input.txt and Config already written by run_optimization().
-    Result is saved to MOGA_Results table in Supabase for the Performance tab.
-    """
+    global is_moga_running
+
+    if is_moga_running:
+        print("⚠️ MOGA is already running. Skipping duplicate background run.")
+        return
+
     try:
+        is_moga_running = True
+
         import time as _t
-        print("\n🔄 MOGA background task started...")
+        print("\n🔄 MOGA detached background task started...")
         t0 = _t.time()
 
         run_moga()
@@ -92,16 +97,24 @@ def run_moga_background():
 
         _sb = get_supabase()
         _sb.table("MOGA_Results").insert({
-            "workloadVariance":     moga_data.get("workloadVariance", 0),
-            "makespan":             moga_data.get("makespan", 0),
+            "workloadVariance": moga_data.get("workloadVariance", 0),
+            "makespan": moga_data.get("makespan", 0),
             "algorithmElapsedTime": moga_data.get("algorithmElapsedTime", 0),
-            "assignments":          moga_data.get("assignments", []),
+            "assignments": moga_data.get("assignments", []),
         }).execute()
+
         print("✅ MOGA saved to Supabase")
 
     except Exception as e:
-        print(f"⚠️  MOGA background task failed (non-blocking): {e}")
+        print(f"⚠️ MOGA detached background task failed: {e}")
 
+    finally:
+        is_moga_running = False
+
+#def start_moga_detached():
+#    thread = threading.Thread(target=run_moga_background, daemon=True)
+#    thread.start()
+#    print("🚀 MOGA started in detached thread")
 
 async def run_optimization(scenario_name: str = "New Scenario", content_str: str = "0"):
     try:
@@ -278,16 +291,29 @@ async def run_optimization(scenario_name: str = "New Scenario", content_str: str
         return {"status": "error", "message": str(e)}
     
 @app.post("/optimize")
-async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scenario", background_tasks: BackgroundTasks = None):
+async def optimize(file: UploadFile = File(...), scenario_name: str = "New Scenario"):
     content_bytes = await file.read()
     content_str = content_bytes.decode("utf-8").strip()
-    result = await run_optimization(scenario_name=scenario_name, content_str=content_str)
 
-    # MO-SAHH is done — queue MOGA to run in background
-    # Frontend already has the MO-SAHH result at this point
-    if background_tasks is not None:
-        background_tasks.add_task(run_moga_background)
-        print("🚀 MOGA queued as background task")
+    # 1. Run MO-SAHH first
+    result = await run_optimization(
+        scenario_name=scenario_name,
+        content_str=content_str
+    )
+
+    # 2. After MO-SAHH success, run MOGA immediately.
+    # This is NOT detached, so frontend will only receive response after MOGA finishes.
+    if result.get("status") == "success":
+        print("🔄 MO-SAHH completed. Now running MOGA before sending frontend response...")
+
+        try:
+            run_moga_background()
+            result["_moga_completed"] = True
+            result["mogaMessage"] = "MOGA comparison completed and saved."
+        except Exception as e:
+            print(f"⚠️ MOGA failed after MO-SAHH: {e}")
+            result["_moga_completed"] = False
+            result["mogaMessage"] = f"MOGA failed: {str(e)}"
 
     return result
     
@@ -337,10 +363,25 @@ async def get_available_techs():
         return {"status": "error", "message": str(e)}
     
 from pydantic import BaseModel
+from typing import List, Dict, Optional
 
 class AssignmentUpdate(BaseModel):
     technician_id: str
     technician_name: str
+
+
+class AlternativeAssignment(BaseModel):
+    tech: str
+    tickets: List[str]
+    techName: Optional[str] = None
+
+
+class ApplyAlternativeRequest(BaseModel):
+    solutionID: int
+    workloadVariance: float
+    makespan: float
+    assignments: List[AlternativeAssignment]
+    technicianLookup: Optional[Dict[str, str]] = {}
 
 @app.patch("/tickets/{ticket_id}/assign")
 async def manually_assign_ticket(ticket_id: int, data: AssignmentUpdate):
@@ -368,6 +409,185 @@ async def manually_assign_ticket(ticket_id: int, data: AssignmentUpdate):
         
     except Exception as e:
         return {"status": "error", "message": str(e)}
+    
+@app.post("/apply-alternative-schedule")
+async def apply_alternative_schedule(payload: ApplyAlternativeRequest):
+    try:
+        supabase = get_supabase()
+
+        allowed_statuses = ["pending", "unassigned"]
+
+        updated_tickets = []
+        skipped_tickets = []
+
+        for assignment in payload.assignments:
+            tech_id = str(assignment.tech)
+
+            tech_name = None
+            if payload.technicianLookup:
+                tech_name = payload.technicianLookup.get(tech_id)
+
+            if not tech_name:
+                tech_name = assignment.techName or tech_id
+
+            for ticket_id in assignment.tickets:
+                ticket_id_str = str(ticket_id)
+
+                # 1. Get current ticket status
+                ticket_res = (
+                    supabase
+                    .table("Ticket")
+                    .select("ticketID,status,attendById,attendByName")
+                    .eq("ticketID", ticket_id_str)
+                    .execute()
+                )
+
+                if not ticket_res.data:
+                    skipped_tickets.append({
+                        "ticketID": ticket_id_str,
+                        "reason": "Ticket not found"
+                    })
+                    continue
+
+                ticket = ticket_res.data[0]
+                current_status = str(ticket.get("status") or "").lower()
+
+                # 2. Protect attending/completed tickets
+                if current_status not in allowed_statuses:
+                    skipped_tickets.append({
+                        "ticketID": ticket_id_str,
+                        "status": ticket.get("status"),
+                        "reason": "Ticket is already attending/completed or not allowed to reassign"
+                    })
+                    continue
+
+                # 3. Apply alternative assignment
+                update_data = {
+                    "attendById": tech_id,
+                    "attendByName": tech_name,
+                    "assignedTime": datetime.now(timezone.utc).isoformat(),
+                    "status": "pending"
+                }
+
+                update_res = (
+                    supabase
+                    .table("Ticket")
+                    .update(update_data)
+                    .eq("ticketID", ticket_id_str)
+                    .execute()
+                )
+
+                if update_res.data:
+                    updated_tickets.append({
+                        "ticketID": ticket_id_str,
+                        "tech": tech_id,
+                        "techName": tech_name
+                    })
+                else:
+                    skipped_tickets.append({
+                        "ticketID": ticket_id_str,
+                        "reason": "Update failed"
+                    })
+        # 4. Send email notification to technicians after successful reassignment
+        notification_results = []
+        tickets_by_tech = {}
+
+        for item in updated_tickets:
+            tech_id = str(item.get("tech"))
+            ticket_id = item.get("ticketID")
+
+            if tech_id not in tickets_by_tech:
+                tickets_by_tech[tech_id] = []
+
+            tickets_by_tech[tech_id].append(ticket_id)
+
+        for tech_id, ticket_list in tickets_by_tech.items():
+            try:
+                tech_res = (
+                    supabase
+                    .table("Technician")
+                    .select("employeeID,fullName,email")
+                    .eq("employeeID", tech_id)
+                    .execute()
+                )
+
+                if not tech_res.data:
+                    notification_results.append({
+                        "tech": tech_id,
+                        "status": "skipped",
+                        "reason": "Technician not found",
+                        "tickets": ticket_list
+                    })
+                    continue
+
+                tech = tech_res.data[0]
+                tech_email = tech.get("email")
+                tech_name = tech.get("fullName") or tech_id
+
+                if not tech_email:
+                    notification_results.append({
+                        "tech": tech_id,
+                        "techName": tech_name,
+                        "status": "skipped",
+                        "reason": "Technician email not found",
+                        "tickets": ticket_list
+                    })
+                    continue
+
+                success = send_dispatch_notification(
+                    tech_email=tech_email,
+                    tech_name=tech_name,
+                    ticket_list=ticket_list
+                )
+
+                notification_results.append({
+                    "tech": tech_id,
+                    "techName": tech_name,
+                    "email": tech_email,
+                    "tickets": ticket_list,
+                    "status": "sent" if success else "failed"
+                })
+
+            except Exception as email_error:
+                notification_results.append({
+                    "tech": tech_id,
+                    "status": "failed",
+                    "reason": str(email_error),
+                    "tickets": ticket_list
+                })
+
+        return {
+            "status": "success",
+            "message": "Alternative schedule applied.",
+            "solutionID": payload.solutionID,
+            "workloadVariance": payload.workloadVariance,
+            "makespan": payload.makespan,
+            "updatedCount": len(updated_tickets),
+            "skippedCount": len(skipped_tickets),
+            "notificationCount": len([n for n in notification_results if n.get("status") == "sent"]),
+            "updatedTickets": updated_tickets,
+            "skippedTickets": skipped_tickets,
+            "notifications": notification_results
+        }
+
+        return {
+            "status": "success",
+            "message": "Alternative schedule applied.",
+            "solutionID": payload.solutionID,
+            "workloadVariance": payload.workloadVariance,
+            "makespan": payload.makespan,
+            "updatedCount": len(updated_tickets),
+            "skippedCount": len(skipped_tickets),
+            "updatedTickets": updated_tickets,
+            "skippedTickets": skipped_tickets
+        }
+
+    except Exception as e:
+        print("❌ Apply alternative schedule error:", e)
+        return {
+            "status": "error",
+            "message": str(e)
+        }
     
 
 @app.get("/moga-history")

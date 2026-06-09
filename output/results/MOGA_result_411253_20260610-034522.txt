@@ -1,0 +1,187 @@
+Experiment ID: 411253 
+---------------------- 
+Algorithm: MOGA (NSGA-II) 
+Start Time: 10-Jun-2026 03:45:20 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Population Size: 20 
+Max Generations: 50 
+Crossover Rate: 0.90 
+Mutation Rate: 0.05 
+No. of Runs: 5 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+10-Jun-2026 03:45:22 
+Run: 0 
+Variance: 1.2500 
+Makespan: 65.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:00 
+-------------------------------------------- 
+10-Jun-2026 03:45:23 
+Run: 1 
+Variance: 1.2500 
+Makespan: 65.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:00 
+-------------------------------------------- 
+10-Jun-2026 03:45:24 
+Run: 2 
+Variance: 1.2500 
+Makespan: 65.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:00 
+-------------------------------------------- 
+10-Jun-2026 03:45:25 
+Run: 3 
+Variance: 1.2500 
+Makespan: 65.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:00 
+-------------------------------------------- 
+10-Jun-2026 03:45:25 
+Run: 4 
+Variance: 1.2500 
+Makespan: 65.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:00 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [1.25 65]):
+Technician 1000311110:
+  2103
+  2110
+  2102
+Technician 1000295951:
+  2108
+  2112
+Technician 1000286793:
+  2106
+Technician 1000305966:
+Technician 26604:
+Technician 1000303218:
+Technician 678910:
+Technician 1000251236:
+Technician 1000297169:
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [1.25 65]):
+Technician 1000311110:
+  2110
+  2103
+  2102
+Technician 1000295951:
+  2112
+  2108
+Technician 1000286793:
+  2106
+Technician 1000305966:
+Technician 26604:
+Technician 1000303218:
+Technician 678910:
+Technician 1000251236:
+Technician 1000297169:
+---------------------- 
+
+Pareto Set 3:
+Schedule 1 (Objectives: [1.25 65]):
+Technician 1000311110:
+  2110
+  2103
+  2102
+Technician 1000295951:
+  2108
+  2112
+Technician 1000286793:
+  2106
+Technician 1000305966:
+Technician 26604:
+Technician 1000303218:
+Technician 678910:
+Technician 1000251236:
+Technician 1000297169:
+---------------------- 
+
+Pareto Set 4:
+Schedule 1 (Objectives: [1.25 65]):
+Technician 1000311110:
+  2110
+  2103
+  2102
+Technician 1000295951:
+  2112
+  2106
+Technician 1000286793:
+  2108
+Technician 1000305966:
+Technician 26604:
+Technician 1000303218:
+Technician 678910:
+Technician 1000251236:
+Technician 1000297169:
+---------------------- 
+
+Pareto Set 5:
+Schedule 1 (Objectives: [1.25 65]):
+Technician 1000311110:
+  2103
+  2102
+  2110
+Technician 1000295951:
+  2106
+  2112
+Technician 1000286793:
+  2108
+Technician 1000305966:
+Technician 26604:
+Technician 1000303218:
+Technician 678910:
+Technician 1000251236:
+Technician 1000297169:
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [1.25 65]
+Pareto Set 2: [1.25 65]
+Pareto Set 3: [1.25 65]
+Pareto Set 4: [1.25 65]
+Pareto Set 5: [1.25 65]
+All IGD: 
+Run 1: 1.250000
+Run 2: 1.250000
+Run 3: 1.250000
+Run 4: 1.250000
+Run 5: 1.250000
+---------------------- 
+Final Pareto-optimal Solution: [1.25 65] 
+Final IGD: 1.250000
+Final Hypervolume: 8.4375
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 1.2500
+Makespan:          65.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000311110:
+  2103
+  2110
+  2102
+Technician 1000295951:
+  2108
+  2112
+Technician 1000286793:
+  2106
+Technician 1000305966:
+Technician 26604:
+Technician 1000303218:
+Technician 678910:
+Technician 1000251236:
+Technician 1000297169:
+End Time: 10-Jun-2026 03:45:26 
+Algorithm Elapsed Time: 6.6520 seconds 
+---------------------- 
