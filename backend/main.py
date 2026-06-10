@@ -6,7 +6,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.services.file_service import update_config_file, read_result, read_moga_result
 from backend.services.matlab_service import run_matlab, run_moga
 from backend.services.csv_service import save_all_to_csv
-from backend.services.email_service import send_dispatch_notification
+from backend.services.email_service import (
+    send_dispatch_notification,
+    send_pending_escalation_notification,
+    send_closure_reminder_notification
+)
 #from backend.supabase_client import supabase
 from backend.supabase_client import get_supabase
 from contextlib import asynccontextmanager
@@ -56,13 +60,121 @@ async def auto_schedule_unassigned():
     finally:
         is_running = False
 
+def minutes_between(start_time, end_time):
+    if not start_time:
+        return 0
+
+    if isinstance(start_time, str):
+        start_time = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+
+    return (end_time - start_time).total_seconds() / 60
+
+
+async def check_rule_based_notifications():
+    try:
+        supabase = get_supabase()
+        now = datetime.now(timezone.utc)
+
+        result = (
+            supabase
+            .table("Ticket")
+            .select("*")
+            .execute()
+        )
+
+        all_tickets = result.data or []
+
+        tickets = [
+            t for t in all_tickets
+            if str(t.get("status") or "").lower() in ["pending", "attending"]
+            and t.get("attendById") is not None
+        ]
+
+        print(f"[RULE-NOTIFICATION] Checking {len(tickets)} active assigned tickets...")
+
+        for ticket in tickets:
+            ticket_id = ticket.get("ticketID")
+            status = str(ticket.get("status") or "").lower()
+            tech_id = ticket.get("attendById")
+
+            base_time = ticket.get("assignedTime") or ticket.get("ticketStart")
+            elapsed_minutes = minutes_between(base_time, now)
+
+            tech_res = (
+                supabase
+                .table("Technician")
+                .select("employeeID,fullName,email")
+                .eq("employeeID", tech_id)
+                .execute()
+            )
+
+            if not tech_res.data:
+                print(f"[RULE-NOTIFICATION] Skip Ticket #{ticket_id}: technician not found.")
+                continue
+
+            tech = tech_res.data[0]
+            tech_email = tech.get("email")
+            tech_name = tech.get("fullName") or tech_id
+
+            if not tech_email:
+                print(f"[RULE-NOTIFICATION] Skip Ticket #{ticket_id}: technician email missing.")
+                continue
+
+            # Rule A: Pending ticket reminder every 15 minutes
+            if status == "pending" and elapsed_minutes >= 15:
+                last_alert = ticket.get("lastPendingAlertAt")
+                minutes_since_last_alert = minutes_between(last_alert, now) if last_alert else 999999
+
+                if minutes_since_last_alert >= 15:
+                    print(f"[RULE-NOTIFICATION] Sending pending escalation for Ticket #{ticket_id}")
+
+                    success = send_pending_escalation_notification(
+                    tech_email=tech_email,
+                    tech_name=tech_name,
+                    ticket_id=ticket_id,
+                    elapsed_minutes=elapsed_minutes
+                )
+
+                    if success:
+                        supabase.table("Ticket").update({
+                            "lastPendingAlertAt": now.isoformat()
+                        }).eq("ticketID", ticket_id).execute()
+
+            # Rule B: Attending ticket closure reminder every 60 minutes
+            if status == "attending" and elapsed_minutes >= 60:
+                last_reminder = ticket.get("lastClosureReminderAt")
+                minutes_since_last_reminder = minutes_between(last_reminder, now) if last_reminder else 999999
+
+                if minutes_since_last_reminder >= 60:
+                    print(f"[RULE-NOTIFICATION] Sending closure reminder for Ticket #{ticket_id}")
+
+                    success = send_closure_reminder_notification(
+                        tech_email=tech_email,
+                        tech_name=tech_name,
+                        ticket_id=ticket_id,
+                        elapsed_minutes=elapsed_minutes
+                    )
+
+                    if success:
+                        supabase.table("Ticket").update({
+                            "lastClosureReminderAt": now.isoformat()
+                        }).eq("ticketID", ticket_id).execute()
+
+    except Exception as e:
+        print(f"[RULE-NOTIFICATION] Error: {str(e)}")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler.add_job(auto_schedule_unassigned, "interval", minutes=30)  # ← change minutes here
+    scheduler.add_job(auto_schedule_unassigned, "interval", minutes=30)
+    scheduler.add_job(check_rule_based_notifications, "interval", minutes=1)
+
     scheduler.start()
     print("[AUTO-SCHEDULER] Scheduler started.")
+    print("[RULE-NOTIFICATION] Rule-based notification scheduler started.")
+
     yield
+
     scheduler.shutdown()
     print("[AUTO-SCHEDULER] Scheduler stopped.")
 

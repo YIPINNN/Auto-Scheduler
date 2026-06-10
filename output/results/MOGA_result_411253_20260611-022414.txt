@@ -1,0 +1,373 @@
+Experiment ID: 411253 
+---------------------- 
+Algorithm: MOGA (NSGA-II) 
+Start Time: 11-Jun-2026 02:24:12 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Population Size: 20 
+Max Generations: 50 
+Crossover Rate: 0.90 
+Mutation Rate: 0.05 
+No. of Runs: 5 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+11-Jun-2026 02:24:14 
+Run: 0 
+Variance: 1.3167 
+Makespan: 135.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+11-Jun-2026 02:24:16 
+Run: 1 
+Variance: 1.3167 
+Makespan: 135.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+11-Jun-2026 02:24:18 
+Run: 2 
+Variance: 1.3167 
+Makespan: 135.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+11-Jun-2026 02:24:20 
+Run: 3 
+Variance: 1.3167 
+Makespan: 135.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+11-Jun-2026 02:24:21 
+Run: 4 
+Variance: 1.3167 
+Makespan: 135.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [1.31666666666667 135]):
+Technician 1000306096:
+  2121
+  2120
+  2122
+Technician 1000305966:
+  2108
+  2128
+  2115
+  2110
+Technician 26604:
+  2114
+  2103
+  2119
+  2130
+Technician 1000311110:
+  2127
+  2104
+  2102
+Technician 1000295951:
+  2107
+  2129
+Technician 1000286793:
+  2116
+Technician 1000299235:
+  2112
+Technician 1000256724:
+  2126
+Technician 1000297986:
+  2124
+Technician 1000294979:
+  2105
+Technician 12345:
+  2118
+Technician 1000303218:
+  2109
+  2111
+Technician 1000405431:
+  2101
+Technician 678910:
+  2106
+  2123
+  2117
+Technician 1000251236:
+  2125
+Technician 1000297169:
+  2113
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [1.31666666666667 135]):
+Technician 1000306096:
+  2125
+  2120
+  2122
+Technician 1000305966:
+  2126
+  2115
+  2119
+  2130
+Technician 26604:
+  2107
+  2114
+  2128
+  2110
+Technician 1000311110:
+  2103
+  2104
+  2102
+Technician 1000295951:
+  2108
+  2129
+Technician 1000286793:
+  2112
+Technician 1000299235:
+  2109
+Technician 1000256724:
+  2106
+Technician 1000297986:
+  2105
+Technician 1000294979:
+  2127
+Technician 12345:
+  2118
+Technician 1000303218:
+  2101
+  2111
+Technician 1000405431:
+  2113
+Technician 678910:
+  2117
+  2121
+  2123
+Technician 1000251236:
+  2124
+Technician 1000297169:
+  2116
+---------------------- 
+
+Pareto Set 3:
+Schedule 1 (Objectives: [1.31666666666667 135]):
+Technician 1000306096:
+  2103
+  2102
+  2122
+Technician 1000305966:
+  2116
+  2115
+  2128
+  2110
+Technician 26604:
+  2108
+  2129
+  2119
+  2130
+Technician 1000311110:
+  2127
+  2104
+  2120
+Technician 1000295951:
+  2118
+  2111
+Technician 1000286793:
+  2106
+Technician 1000299235:
+  2112
+Technician 1000256724:
+  2124
+Technician 1000297986:
+  2109
+Technician 1000294979:
+  2113
+Technician 12345:
+  2125
+Technician 1000303218:
+  2101
+  2114
+Technician 1000405431:
+  2107
+Technician 678910:
+  2123
+  2117
+  2121
+Technician 1000251236:
+  2126
+Technician 1000297169:
+  2105
+---------------------- 
+
+Pareto Set 4:
+Schedule 1 (Objectives: [1.31666666666667 135]):
+Technician 1000306096:
+  2122
+  2121
+  2120
+Technician 1000305966:
+  2103
+  2130
+  2128
+  2115
+Technician 26604:
+  2129
+  2116
+  2110
+  2119
+Technician 1000311110:
+  2107
+  2104
+  2102
+Technician 1000295951:
+  2114
+  2124
+Technician 1000286793:
+  2112
+Technician 1000299235:
+  2127
+Technician 1000256724:
+  2108
+Technician 1000297986:
+  2126
+Technician 1000294979:
+  2125
+Technician 12345:
+  2109
+Technician 1000303218:
+  2111
+  2113
+Technician 1000405431:
+  2101
+Technician 678910:
+  2106
+  2123
+  2117
+Technician 1000251236:
+  2105
+Technician 1000297169:
+  2118
+---------------------- 
+
+Pareto Set 5:
+Schedule 1 (Objectives: [1.31666666666667 135]):
+Technician 1000306096:
+  2120
+  2121
+  2122
+Technician 1000305966:
+  2115
+  2128
+  2106
+  2130
+Technician 26604:
+  2129
+  2112
+  2110
+  2119
+Technician 1000311110:
+  2107
+  2104
+  2102
+Technician 1000295951:
+  2114
+  2109
+Technician 1000286793:
+  2101
+Technician 1000299235:
+  2108
+Technician 1000256724:
+  2124
+Technician 1000297986:
+  2118
+Technician 1000294979:
+  2105
+Technician 12345:
+  2116
+Technician 1000303218:
+  2111
+  2125
+Technician 1000405431:
+  2126
+Technician 678910:
+  2117
+  2123
+  2103
+Technician 1000251236:
+  2113
+Technician 1000297169:
+  2127
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [1.31666666666667 135]
+Pareto Set 2: [1.31666666666667 135]
+Pareto Set 3: [1.31666666666667 135]
+Pareto Set 4: [1.31666666666667 135]
+Pareto Set 5: [1.31666666666667 135]
+All IGD: 
+Run 1: 1.316667
+Run 2: 1.316667
+Run 3: 1.316667
+Run 4: 1.316667
+Run 5: 1.316667
+---------------------- 
+Final Pareto-optimal Solution: [1.31666666666667 135] 
+Final IGD: 1.316667
+Final Hypervolume: 16.4092
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 1.3167
+Makespan:          135.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000306096:
+  2121
+  2120
+  2122
+Technician 1000305966:
+  2108
+  2128
+  2115
+  2110
+Technician 26604:
+  2114
+  2103
+  2119
+  2130
+Technician 1000311110:
+  2127
+  2104
+  2102
+Technician 1000295951:
+  2107
+  2129
+Technician 1000286793:
+  2116
+Technician 1000299235:
+  2112
+Technician 1000256724:
+  2126
+Technician 1000297986:
+  2124
+Technician 1000294979:
+  2105
+Technician 12345:
+  2118
+Technician 1000303218:
+  2109
+  2111
+Technician 1000405431:
+  2101
+Technician 678910:
+  2106
+  2123
+  2117
+Technician 1000251236:
+  2125
+Technician 1000297169:
+  2113
+End Time: 11-Jun-2026 02:24:23 
+Algorithm Elapsed Time: 10.7214 seconds 
+---------------------- 

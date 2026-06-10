@@ -43,13 +43,12 @@ const Notification = () => {
     }, 1000);
 
     // 2. Rules Evaluation Evaluator: Evaluates dispatch policies every 30 seconds
-    const ruleEvaluationEngine = setInterval(async () => {
-      await evaluateNotificationRules();
+    const refreshTimer = setInterval(async () => {
+      await fetchNotificationLogs();
     }, 30000);
-
     return () => {
       clearInterval(clockTimer);
-      clearInterval(ruleEvaluationEngine);
+      clearInterval(refreshTimer);
     };
   }, []);
 

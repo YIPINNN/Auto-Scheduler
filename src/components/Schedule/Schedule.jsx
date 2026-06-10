@@ -615,9 +615,9 @@ const Schedule = ({ technicians = [] }) => {
                                 </div>
 
                                 <div className="solution-metrics">
-                                  <span>Variance: {Number(finalMetrics.workloadVariance || 0).toFixed(4)}</span>
+                                  <span>Variance: {Number(solution.workloadVariance || 0).toFixed(4)}</span>
                                   <span>•</span>
-                                  <span>Makespan: {Number(finalMetrics.makespan || 0).toFixed(0)} min</span>
+                                  <span>Makespan: {Number(solution.makespan || 0).toFixed(0)} min</span>
                                 </div>
                               </div>
 
