@@ -1,0 +1,121 @@
+Experiment ID: 411253 
+---------------------- 
+Algorithm: MOGA (NSGA-II) 
+Start Time: 11-Jun-2026 12:31:09 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Population Size: 20 
+Max Generations: 50 
+Crossover Rate: 0.90 
+Mutation Rate: 0.05 
+No. of Runs: 2 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+11-Jun-2026 12:31:12 
+Run: 0 
+Variance: 0.5536 
+Makespan: 70.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+11-Jun-2026 12:31:13 
+Run: 1 
+Variance: 0.5536 
+Makespan: 70.0000 
+No of Evaluation: 1000 
+Execution Time Per Run: 00:00:01 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.553571428571429 70]):
+Technician 1000305966:
+  2003
+  2015
+Technician 1000286793:
+  2001
+  2012
+Technician 1000294979:
+  2005
+  2004
+Technician 1000251236:
+  11
+Technician 678910:
+  2010
+Technician 1000303218:
+  2014
+  2011
+  2008
+Technician 111213:
+  2013
+Technician 42195:
+  2016
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [0.553571428571429 70]):
+Technician 1000305966:
+  2013
+  2015
+Technician 1000286793:
+  11
+  2004
+Technician 1000294979:
+  2001
+  2012
+Technician 1000251236:
+  2003
+Technician 678910:
+  2005
+Technician 1000303218:
+  2008
+  2014
+  2011
+Technician 111213:
+  2016
+Technician 42195:
+  2010
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.553571428571429 70]
+Pareto Set 2: [0.553571428571429 70]
+All IGD: 
+Run 1: 0.553571
+Run 2: 0.553571
+---------------------- 
+Final Pareto-optimal Solution: [0.553571428571429 70] 
+Final IGD: 0.553571
+Final Hypervolume: 8.4429
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.5536
+Makespan:          70.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000305966:
+  2003
+  2015
+Technician 1000286793:
+  2001
+  2012
+Technician 1000294979:
+  2005
+  2004
+Technician 1000251236:
+  11
+Technician 678910:
+  2010
+Technician 1000303218:
+  2014
+  2011
+  2008
+Technician 111213:
+  2013
+Technician 42195:
+  2016
+End Time: 11-Jun-2026 12:31:15 
+Algorithm Elapsed Time: 5.1688 seconds 
+---------------------- 

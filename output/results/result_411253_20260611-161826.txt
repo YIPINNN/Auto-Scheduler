@@ -1,0 +1,161 @@
+Experiment ID: 411253 
+---------------------- 
+Start Time: 11-Jun-2026 16:18:24 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Use Problem State Features: 1 
+No. of Problem State Features: 8 
+No. of Evaluations: 151 
+Max No. of Heuristic Blocks: 10 
+Initial No. of Heuristic Blocks: 2 
+Initial Temperature: 350 
+Min. Temperature: 0.00010 
+Cooling Rate: 0.95000 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+11-Jun-2026 16:18:26 
+Run: 0 
+     1      1      1      1   1611    266    216      1 
+     1      1      1      1     61      1      1      1 
+     1      1    196      1      1      1      1      1 
+   146      1      1   1036    916      1      1   1301 
+   351      1    866    136      1      1    481      1 
+   301    146      1      1      1    176   1841   1691 
+   501      1      1      1   1046     11   1191      1 
+0.5469 0.9649 0.9706 0.4854 0.1419 0.9157 0.9595 0.0357 7.0000 6.0000 
+0.9575 0.1576 0.9572 0.8003 0.4218 0.7922 0.6557 0.8491 6.0000 6.0000 
+Variance: 0.0667 
+Makespan: 60.0000 
+Fitness: 0.4769 
+No of Acceptance: 147 
+No of Rejection: 6 
+No of Evaluation: 150 
+Execution Time Per Run: 00:00:16 
+-------------------------------------------- 
+11-Jun-2026 16:18:43 
+Run: 1 
+     1      1      1      1      1      1     26      1 
+   151    626      1      1      1     71      1      1 
+     1   1651      1      1      1      1      1      1 
+     1      1   1906      1      1      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1     91      1      1      1      1    401    861 
+   106      1      1      1      1     26    551      1 
+0.9227 0.2859 0.9848 0.8390 0.4706 0.2691 0.5039 0.3077 4.0000 3.0000 
+0.8004 0.5437 0.7157 0.4333 0.5607 0.7490 0.6468 0.1387 6.0000 7.0000 
+Variance: 0.0667 
+Makespan: 60.0000 
+Fitness: 0.4769 
+No of Acceptance: 138 
+No of Rejection: 24 
+No of Evaluation: 150 
+Execution Time Per Run: 00:00:15 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.0667 60]):
+Technician 1000251236:
+  2016
+Technician 1000256724:
+  2009
+Technician 1000286793:
+  2010
+Technician 1000293976:
+  2001
+Technician 1000294979:
+  2008
+Technician 1000295951:
+  2006
+Technician 1000299235:
+  2005
+Technician 1000303218:
+  2011
+Technician 1000306096:
+  2013
+Technician 1000328727:
+  2014
+Technician 111213:
+  2015
+Technician 30222:
+  2004
+Technician 42195:
+  2012
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [0.0667 60]):
+Technician 1000251236:
+  2016
+Technician 1000256724:
+  2009
+Technician 1000286793:
+  2010
+Technician 1000293976:
+  2001
+Technician 1000294979:
+  2008
+Technician 1000295951:
+  2006
+Technician 1000299235:
+  2004
+Technician 1000303218:
+  2011
+Technician 1000306096:
+  2013
+Technician 1000328727:
+  2014
+Technician 111213:
+  2015
+Technician 30222:
+  2005
+Technician 42195:
+  2012
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.0667 60]
+Pareto Set 2: [0.0667 60]
+---------------------- 
+Final Pareto-optimal Solution: [0.0667 60] 
+All IGD PE: 
+Run 1: 0.000000
+Run 2: 0.000000
+Final IGD (mean across runs): 0.000000
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.0667
+Makespan:          60.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000251236:
+  2016
+Technician 1000256724:
+  2009
+Technician 1000286793:
+  2010
+Technician 1000293976:
+  2001
+Technician 1000294979:
+  2008
+Technician 1000295951:
+  2006
+Technician 1000299235:
+  2005
+Technician 1000303218:
+  2011
+Technician 1000306096:
+  2013
+Technician 1000328727:
+  2014
+Technician 111213:
+  2015
+Technician 30222:
+  2004
+Technician 42195:
+  2012
+End Time: 11-Jun-2026 16:19:07 
+Algorithm Elapsed Time: 43.3763 seconds 
+---------------------- 

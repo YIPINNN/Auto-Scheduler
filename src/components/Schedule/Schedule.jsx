@@ -328,7 +328,8 @@ const Schedule = ({ technicians = [] }) => {
       <header className="glass-header">
         <div className="header-text">
           <h1>Optimization Engine</h1>
-          <p>MATLAB-Powered MO-SAHH Scheduler Desk</p>
+          <p>MATLAB-Powered MO-SAHH Scheduler Desk. Auto-scheduler checks for unassigned tickets every 30 minutes and runs optimization when needed.
+</p>
         </div>
         {isProcessing && (
           <div className="status-loader">

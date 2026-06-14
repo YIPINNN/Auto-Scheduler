@@ -178,31 +178,45 @@ const Performance = () => {
       }
 
       // 2. Fetch MOGA history from backend
+            // 2. Fetch MOGA history from backend
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
 
         const mogaRes = await fetch('http://localhost:8000/moga-history', {
           signal: controller.signal
         });
 
         clearTimeout(timeoutId);
+
+        if (!mogaRes.ok) {
+          throw new Error(`MOGA history HTTP error: ${mogaRes.status}`);
+        }
+
         const mogaJson = await mogaRes.json();
-        const rawMoga = mogaJson.data || [];
+        const rawMoga = Array.isArray(mogaJson.data) ? mogaJson.data : [];
 
         const formattedMoga = rawMoga.map((r, i) => ({
-          runLabel:             `Run ${i + 1}`,
-          workloadVariance:     Number(r.workloadVariance     || 0),
-          makespan:             Number(r.makespan             || 0),
+          runLabel: `Run ${i + 1}`,
+          workloadVariance: Number(r.workloadVariance || 0),
+          makespan: Number(r.makespan || 0),
           algorithmElapsedTime: Number(r.algorithmElapsedTime || 0),
         }));
-        setMogaHistory(formattedMoga);
 
-        // Build comparison array — align MO-SAHH and MOGA by run index
-        // This is set after formattedRuns is built below
+        // Only update when backend returns valid data.
+        // If current MOGA run is interrupted, keep the previous chart data.
+        if (formattedMoga.length > 0) {
+          setMogaHistory(formattedMoga);
+        } else {
+          console.warn('MOGA history returned empty. Keeping previous MOGA chart data.');
+        }
+
       } catch (mogaErr) {
         console.error('MOGA history fetch error:', mogaErr);
-        setMogaHistory([]);
+
+        // Important:
+        // Do NOT clear mogaHistory here.
+        // Keep previous MOGA data visible if current MOGA fetch fails/interrupted.
       }
 
       const today = new Date().toISOString().split('T')[0];

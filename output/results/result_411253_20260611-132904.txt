@@ -1,0 +1,95 @@
+Experiment ID: 411253 
+---------------------- 
+Start Time: 11-Jun-2026 13:29:00 
+Dataset: C:\Users\yipin\OneDrive\Desktop\Y4S1\FYP\my-frontend\output\input.txt 
+---------------------- 
+Use Problem State Features: 1 
+No. of Problem State Features: 8 
+No. of Evaluations: 151 
+Max No. of Heuristic Blocks: 10 
+Initial No. of Heuristic Blocks: 2 
+Initial Temperature: 350 
+Min. Temperature: 0.00010 
+Cooling Rate: 0.95000 
+Objectives: Workload Variance & Makespan 
+------------------------------------------------------------------ 
+11-Jun-2026 13:29:04 
+Run: 0 
+     1      1      1      1   1631   1031      1      1 
+     1      1      1      1      1      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1    491     26      1   1346      1      1    551 
+   671      1      1    686      1      1   1496      1 
+  1901      1      1      1      1    176   1436    791 
+     1      1      1      1     56     11    191      1 
+0.5469 0.9649 0.9706 0.4854 0.1419 0.9157 0.9595 0.0357 7.0000 6.0000 
+0.9575 0.1576 0.9572 0.8003 0.4218 0.7922 0.6557 0.8491 6.0000 6.0000 
+Variance: 0.1238 
+Makespan: 35.0000 
+Fitness: 0.4588 
+No of Acceptance: 150 
+No of Rejection: 0 
+No of Evaluation: 150 
+Execution Time Per Run: 00:00:13 
+-------------------------------------------- 
+11-Jun-2026 13:29:18 
+Run: 1 
+     1    976      1      1      1      1      1   1276 
+   176      1   1741      1     11    606      1   1156 
+     1      1      1      1     11      1      1      1 
+     1    116      1      1      1      1     11      1 
+   146      1      1     71    381      1      1      1 
+     1      1      1      1      1      1      1      1 
+     1   1191    341      1      1      1      1      1 
+0.7710 0.3782 0.7295 0.2691 0.4775 0.2364 0.8296 0.9345 2.0000 1.0000 
+0.0427 0.7043 0.2243 0.6730 0.6237 0.1771 0.7669 0.1079 4.0000 2.0000 
+Variance: 0.1238 
+Makespan: 35.0000 
+Fitness: 0.4588 
+No of Acceptance: 150 
+No of Rejection: 0 
+No of Evaluation: 150 
+Execution Time Per Run: 00:00:11 
+-------------------------------------------- 
+All Pareto Schedules Found Along the Pareto Front:
+
+Pareto Set 1:
+Schedule 1 (Objectives: [0.1238 35]):
+Technician 1000286793:
+  13
+Technician 1000305966:
+  12
+---------------------- 
+
+Pareto Set 2:
+Schedule 1 (Objectives: [0.1238 35]):
+Technician 1000286793:
+  13
+Technician 1000305966:
+  12
+---------------------- 
+------------------------------------------------------------------ 
+All Pareto Fronts: 
+Pareto Set 1: [0.1238 35]
+Pareto Set 2: [0.1238 35]
+---------------------- 
+Final Pareto-optimal Solution: [0.1238 35] 
+All IGD PE: 
+Run 1: 0.000000
+Run 2: 0.000000
+Final IGD (mean across runs): 0.000000
+Number of non-dominated solutions: 1 
+---------------------- 
+---------------------- 
+FINAL BEST SCHEDULE SELECTED:
+Workload Variance: 0.1238
+Makespan:          35.0000
+(Selected by: 0.5*Variance + 0.5*Makespan normalised + crowding distance tiebreaker)
+---------------------- 
+Technician 1000286793:
+  13
+Technician 1000305966:
+  12
+End Time: 11-Jun-2026 13:29:44 
+Algorithm Elapsed Time: 44.3812 seconds 
+---------------------- 

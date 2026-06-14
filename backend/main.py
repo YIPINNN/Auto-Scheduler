@@ -166,8 +166,23 @@ async def check_rule_based_notifications():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler.add_job(auto_schedule_unassigned, "interval", minutes=30)
-    scheduler.add_job(check_rule_based_notifications, "interval", minutes=1)
+    scheduler.add_job(
+        auto_schedule_unassigned,
+        "interval",
+        minutes=30,
+        misfire_grace_time=600,
+        coalesce=True,
+        max_instances=1
+    )
+
+    scheduler.add_job(
+        check_rule_based_notifications,
+        "interval",
+        minutes=10,
+        misfire_grace_time=300,
+        coalesce=True,
+        max_instances=1
+    )
 
     scheduler.start()
     print("[AUTO-SCHEDULER] Scheduler started.")
@@ -704,17 +719,36 @@ async def apply_alternative_schedule(payload: ApplyAlternativeRequest):
 
 @app.get("/moga-history")
 async def get_moga_history():
-    """Return last 10 MOGA runs for Performance tab comparison charts."""
+    """
+    Return last 10 completed MOGA runs.
+    If current MOGA is interrupted, old completed records should still be available.
+    """
     try:
         supabase = get_supabase()
+
         result = (
             supabase.table("MOGA_Results")
             .select("workloadVariance, makespan, algorithmElapsedTime, created_at")
-            .order("created_at", desc=False)
+            .order("created_at", desc=True)
             .limit(10)
             .execute()
         )
-        return {"status": "success", "data": result.data or []}
+
+        data = result.data or []
+        data = list(reversed(data))
+
+        return {
+            "status": "success",
+            "data": data,
+            "isMogaRunning": is_moga_running
+        }
+
     except Exception as e:
         print(f"❌ MOGA history fetch failed: {e}")
-        return {"status": "error", "data": []}
+
+        return {
+            "status": "success",
+            "data": [],
+            "isMogaRunning": is_moga_running,
+            "warning": str(e)
+        }
